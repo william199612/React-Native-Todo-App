@@ -39,8 +39,9 @@ const Login = ({ navigation }) => {
 					<Formik
 						initialValues={{ email: '', password: '' }}
 						onSubmit={(values) => {
-							console.log(values);
-							navigation.navigate('Settings');
+							console.log('Submit form, navigating to main stack...');
+							// console.log(values);
+							navigation.navigate('Main');
 						}}
 					>
 						{({ handleChange, handleBlur, handleSubmit, values }) => (

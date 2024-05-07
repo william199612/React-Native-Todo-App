@@ -45,7 +45,7 @@ const Signup = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingWrapper>
-			<StyledContainer>
+			<StyledContainer signup={true}>
 				<StatusBar style="dark" />
 				<InnerContainer>
 					<PageTitle>JustDo</PageTitle>
