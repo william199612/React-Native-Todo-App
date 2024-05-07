@@ -25,7 +25,7 @@ import {
 	TextLinkContent,
 } from '../components/styles';
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
 	const [hidePassword, setHidePassword] = useState(true);
 	const [show, setShow] = useState(false);
 	const [date, setDate] = useState(new Date());
@@ -135,7 +135,7 @@ const Signup = () => {
 								</StyledButton>
 								<ExtraView>
 									<ExtraText>Already have an account? </ExtraText>
-									<TextLink>
+									<TextLink onPress={() => navigation.navigate('Login')}>
 										<TextLinkContent>Login</TextLinkContent>
 									</TextLink>
 								</ExtraView>

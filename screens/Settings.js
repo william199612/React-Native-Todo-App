@@ -10,7 +10,7 @@ import {
 	SettingsContainer,
 } from '../components/styles';
 
-const Settings = () => {
+const Settings = ({ navigation }) => {
 	return (
 		<>
 			<StatusBar style="dark" />
@@ -19,10 +19,10 @@ const Settings = () => {
 					<PageTitle settings={true}>Settings</PageTitle>
 					<StyledFormArea>
 						<Line />
-						<StyledButton onSubmit={() => {}}>
+						<StyledButton onPress={() => {}}>
 							<ButtonText>Other</ButtonText>
 						</StyledButton>
-						<StyledButton onSubmit={() => {}}>
+						<StyledButton onPress={() => navigation.navigate('Login')}>
 							<ButtonText>Logout</ButtonText>
 						</StyledButton>
 					</StyledFormArea>

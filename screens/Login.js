@@ -25,7 +25,7 @@ import {
 	TextLinkContent,
 } from '../components/styles';
 
-const Login = () => {
+const Login = ({ navigation }) => {
 	const [hidePassword, setHidePassword] = useState(true);
 	return (
 		<KeyboardAvoidingWrapper>
@@ -40,6 +40,7 @@ const Login = () => {
 						initialValues={{ email: '', password: '' }}
 						onSubmit={(values) => {
 							console.log(values);
+							navigation.navigate('Settings');
 						}}
 					>
 						{({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -79,7 +80,7 @@ const Login = () => {
 								</StyledButton>
 								<ExtraView>
 									<ExtraText>Don't have an account? </ExtraText>
-									<TextLink>
+									<TextLink onPress={() => navigation.navigate('Signup')}>
 										<TextLinkContent>Sign up</TextLinkContent>
 									</TextLink>
 								</ExtraView>
