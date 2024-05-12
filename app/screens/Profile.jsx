@@ -10,13 +10,13 @@ import {
 	SettingsContainer,
 } from '../components/styles';
 
-const Settings = ({ navigation }) => {
+const Profile = ({ navigation }) => {
 	return (
 		<>
 			<StatusBar style="dark" />
 			<InnerContainer>
 				<SettingsContainer>
-					<PageTitle settings={true}>Settings</PageTitle>
+					<PageTitle settings={true}>Profile</PageTitle>
 					<StyledFormArea>
 						<Line />
 						<StyledButton onPress={() => {}}>
@@ -32,4 +32,4 @@ const Settings = ({ navigation }) => {
 	);
 };
 
-export default Settings;
+export default Profile;

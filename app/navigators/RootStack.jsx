@@ -6,7 +6,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 // screen
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
-import Settings from '../screens/Settings';
+import Home from '../screens/Home';
+import Calendar from '../screens/Calendar';
+import About from '../screens/About';
+import Profile from '../screens/Profile';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,27 +38,24 @@ const MainStack = () => {
 				return {
 					tabBarIcon: ({ color, size }) => {
 						let iconName;
-						if (route.name === 'Calendar') {
+						if (route.name === 'Home') {
+							iconName = 'home';
+						} else if (route.name === 'Calendar') {
 							iconName = 'calendar';
-						} else if (route.name === 'Todo') {
-							iconName = 'cog';
-						} else if (route.name === 'Add') {
-							iconName = 'plus';
 						} else if (route.name === 'About') {
 							iconName = 'about';
-						} else if (route.name === 'Settings') {
-							iconName = 'cog';
+						} else if (route.name === 'Profile') {
+							iconName = 'profile';
 						}
 						return <FontAwesome5 name={iconName} size={size} color={color} />;
 					},
 				};
 			}}
 		>
-			<Tab.Screen name="Calendar" component={Settings} />
-			<Tab.Screen name="Todo" component={Settings} />
-			<Tab.Screen name="Add" component={Settings} />
-			<Tab.Screen name="About" component={Settings} />
-			<Tab.Screen name="Settings" component={Settings} />
+			<Tab.Screen name="Home" component={Home} />
+			<Tab.Screen name="Calendar" component={Calendar} />
+			<Tab.Screen name="About" component={About} />
+			<Tab.Screen name="Profile" component={Profile} />
 		</Tab.Navigator>
 	);
 };

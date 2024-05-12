@@ -41,7 +41,7 @@ const Login = ({ navigation }) => {
 						onSubmit={(values) => {
 							console.log('Submit form, navigating to main stack...');
 							// console.log(values);
-							navigation.navigate('Main');
+							navigation.navigate('Home');
 						}}
 					>
 						{({ handleChange, handleBlur, handleSubmit, values }) => (
