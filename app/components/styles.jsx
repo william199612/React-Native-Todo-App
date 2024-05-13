@@ -13,9 +13,10 @@ export const Colors = {
 	brand: '#346ec9',
 	green: '#10B981',
 	red: '#EF4444',
+	black: '#000',
 };
 
-const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+const { primary, secondary, tertiary, darkLight, brand, green, red, black } = Colors;
 
 export const StyledContainer = styled.View`
 	flex: 1;
@@ -43,7 +44,6 @@ export const SettingsContainer = styled(InnerContainer)`
 
 export const PageTitle = styled.Text`
 	font-size: 30px;
-	font-style: italic;
 	text-align: center;
 	font-weight: bold;
 	color: ${brand};
