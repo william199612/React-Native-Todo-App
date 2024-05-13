@@ -16,9 +16,7 @@ const Profile = ({ navigation }) => {
 			<StatusBar style="dark" />
 			<InnerContainer>
 				<SettingsContainer>
-					<PageTitle settings={true}>Profile</PageTitle>
 					<StyledFormArea>
-						<Line />
 						<StyledButton onPress={() => {}}>
 							<ButtonText>Other</ButtonText>
 						</StyledButton>
