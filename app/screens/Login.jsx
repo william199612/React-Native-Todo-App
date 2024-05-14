@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Formik } from 'formik';
 import { Feather, Octicons, Ionicons, Fontisto } from '@expo/vector-icons';
@@ -27,6 +27,21 @@ import {
 
 const Login = ({ navigation }) => {
 	const [hidePassword, setHidePassword] = useState(true);
+	const [message, setMessage] = useState('');
+
+	const handleLogin = (credentials, setSubmitting) => {
+		const url = 'http://localhost:8080/user/login';
+
+		fetch(url, credentials)
+			.then((response) => {
+				navigation.navigate('Todo');
+			})
+			.catch((error) => {
+				setMessage(error);
+			});
+		setSubmitting(false);
+	};
+
 	return (
 		<KeyboardAvoidingWrapper>
 			<StyledContainer>
@@ -38,15 +53,22 @@ const Login = ({ navigation }) => {
 
 					<Formik
 						initialValues={{ email: '', password: '' }}
-						onSubmit={(values) => {
+						validator={() => ({})}
+						onSubmit={(values, { setSubmitting }) => {
+							console.log(values);
 							console.log('Submit form, navigating to main stack...');
-							// console.log(values);
+							if (values.email == '' || values.password == '') {
+								setMessage('Please fill all the fields.');
+								setSubmitting(false, setSubmitting);
+							} else {
+								handleLogin(values);
+							}
 							navigation.navigate('Home');
 						}}
 					>
-						{({ handleChange, handleBlur, handleSubmit, values }) => (
+						{({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
 							<StyledFormArea>
-								<MsgBox>...</MsgBox>
+								{message !== null && <MsgBox>{message}</MsgBox>}
 								<LoginTextInput
 									label="Email Address"
 									icon="mail"
@@ -71,9 +93,16 @@ const Login = ({ navigation }) => {
 									setHidePassword={setHidePassword}
 								/>
 
-								<StyledButton onSubmit={handleSubmit}>
-									<ButtonText>Login</ButtonText>
-								</StyledButton>
+								{!isSubmitting ? (
+									<StyledButton onSubmit={handleSubmit}>
+										<ButtonText>Login</ButtonText>
+									</StyledButton>
+								) : (
+									<StyledButton disabled={true}>
+										<ActivityIndicator size="large" color={Colors.primary} />
+									</StyledButton>
+								)}
+
 								<Line />
 								<StyledButton google={true} onSubmit={handleSubmit}>
 									<Fontisto name="google" color={Colors.primary} size={25} />
