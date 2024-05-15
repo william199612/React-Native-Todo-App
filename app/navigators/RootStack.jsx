@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -10,18 +10,29 @@ import MainStack from './MainStack';
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
+	const [isLoggedIn, , setIsLoggedIn] = useState(true);
 	return (
 		<NavigationContainer>
-			<Stack.Navigator
-				screenOptions={{
-					headerShown: false,
-				}}
-				initialRouteName="Login"
-			>
-				<Stack.Screen name="Login" component={Login} />
-				<Stack.Screen name="Signup" component={Signup} />
-				<Stack.Screen name="Main" component={MainStack} />
-			</Stack.Navigator>
+			{isLoggedIn ? (
+				<Stack.Navigator
+					screenOptions={{
+						headerShown: false,
+					}}
+					initialRouteName="Login"
+				>
+					<Stack.Screen name="Main" component={MainStack} />
+				</Stack.Navigator>
+			) : (
+				<Stack.Navigator
+					screenOptions={{
+						headerShown: false,
+					}}
+					initialRouteName="Login"
+				>
+					<Stack.Screen name="Login" component={Login} />
+					<Stack.Screen name="Signup" component={Signup} />
+				</Stack.Navigator>
+			)}
 		</NavigationContainer>
 	);
 };
