@@ -1,0 +1,64 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "React Native App API",
+		"description": "This is a React Native application api that provides todo list functionality",
+		"version": "1.0.0",
+		"contact": {
+			"email": "n11351519@ntu.edu.au"
+		},
+		"license": {
+			"name": "Apache License 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"paths": {
+		"/api/todo": {
+			"get": {
+				"summary": "List all todos",
+				"description": "Full listing of todo info",
+				"responses": {
+					"200": {
+						"description": "success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "string",
+											"enum": ["true", "false"]
+										},
+										"todos": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"ID": {
+														"type": "integer"
+													},
+													"context": {
+														"type": "string"
+													},
+													"startTime": {
+														"type": "string"
+													},
+													"endTime": {
+														"type": "string"
+													},
+													"color": {
+														"type": "string"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
