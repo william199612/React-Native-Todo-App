@@ -9,6 +9,8 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./docs/openapi.json");
 
 const indexRoute = require("./routes/index");
+const userRoute = require("./routes/user");
+const todoRoute = require("./routes/todo");
 
 const app = express();
 const logStream = fs.createWriteStream(
