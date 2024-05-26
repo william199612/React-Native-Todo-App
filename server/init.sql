@@ -1,6 +1,6 @@
 DROP SCHEMA IF EXISTS todo;
 CREATE SCHEMA todo;
-USE todo;
+USE totododo;
 SET AUTOCOMMIT=0;
 
 

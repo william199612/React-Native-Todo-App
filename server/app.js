@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const db = require("./db");
 const knex = require("knex")(db);
 const fs = require("fs");
 const swaggerUI = require("swagger-ui-express");
