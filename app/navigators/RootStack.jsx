@@ -13,26 +13,21 @@ const RootStack = () => {
 	const [isLoggedIn, , setIsLoggedIn] = useState(true);
 	return (
 		<NavigationContainer>
-			{isLoggedIn ? (
-				<Stack.Navigator
-					screenOptions={{
-						headerShown: false,
-					}}
-					initialRouteName="Login"
-				>
+			<Stack.Navigator
+				screenOptions={{
+					headerShown: false,
+				}}
+				initialRouteName="Login"
+			>
+				{!isLoggedIn ? (
+					<>
+						<Stack.Screen name="Login" component={Login} />
+						<Stack.Screen name="Signup" component={Signup} />
+					</>
+				) : (
 					<Stack.Screen name="Main" component={MainStack} />
-				</Stack.Navigator>
-			) : (
-				<Stack.Navigator
-					screenOptions={{
-						headerShown: false,
-					}}
-					initialRouteName="Login"
-				>
-					<Stack.Screen name="Login" component={Login} />
-					<Stack.Screen name="Signup" component={Signup} />
-				</Stack.Navigator>
-			)}
+				)}
+			</Stack.Navigator>
 		</NavigationContainer>
 	);
 };

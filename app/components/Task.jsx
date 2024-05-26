@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Card, Text } from 'react-native-paper';
 import { Colors } from './styles';
@@ -15,13 +15,13 @@ const Task = ({ data }) => {
 				<Text style={[styles.description, data.isCompleted && styles.completedText]}>{data.description}</Text>
 				<Text style={styles.time}>{data.dueTime}</Text>
 			</Card.Content>
-			<TouchableOpacity style={styles.taskContainer} onPress={handleComplete}>
+			<Pressable style={styles.taskContainer} onPress={handleComplete}>
 				<FontAwesome5
 					name={data.isCompleted ? 'check-circle' : 'circle'}
 					size={20}
 					color={data.isCompleted ? 'green' : 'grey'}
 				/>
-			</TouchableOpacity>
+			</Pressable>
 		</Card>
 	);
 };
