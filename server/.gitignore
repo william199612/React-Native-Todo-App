@@ -1,2 +1,12 @@
+# modules
 /node_modules/
+
+# dependencies
 .env
+
+# seed files
+**/seeds
+**/migrations
+
+# server logs file
+access.txt
