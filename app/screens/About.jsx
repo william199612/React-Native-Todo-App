@@ -1,14 +1,18 @@
 import React from 'react';
-import { View, Text, ScrollView, FlatList, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
 import { Feather, Ionicons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Colors } from '../components/styles';
-
-const resourseData = [{}];
+import licenses from '../licenses.json';
 
 const About = () => {
+	const licenseData = Object.keys(licenses).map((key) => ({
+		name: key,
+		...licenses[key],
+	}));
 	return (
 		<ScrollView>
 			<View style={styles.container}>
@@ -79,6 +83,19 @@ const About = () => {
 							</Text>
 							<Text style={styles.description}>bcrypt</Text>
 						</View>
+					</View>
+					<Text style={styles.subtitle}>Licenses</Text>
+					<Text style={styles.line}></Text>
+					<View>
+						<Text style={styles.text}>
+							<MaterialCommunityIcons name="license" size={20} color={Colors.brand} />
+							{'  '}MIT
+						</Text>
+						{licenseData.map((license, index) => (
+							<Text key={index} style={styles.textLinkContent}>
+								{`${index + 1}. ${license.name}`}
+							</Text>
+						))}
 					</View>
 				</View>
 			</View>
