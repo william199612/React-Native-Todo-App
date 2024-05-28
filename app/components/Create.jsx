@@ -14,9 +14,9 @@ const Create = ({ task, setTask, taskList, setTaskList }) => {
 	};
 
 	return (
-		<View style={theme ? styles.darkAddContainer : styles.addContainer}>
+		<View style={theme === 'dark' ? styles.darkAddContainer : styles.addContainer}>
 			<TextInput
-				style={theme ? styles.darkInput : styles.input}
+				style={theme === 'dark' ? styles.darkInput : styles.input}
 				placeholder={'Write a task...'}
 				placeholderTextColor={theme === 'dark' ? Colors.primary : Colors.darkLight}
 				onChangeText={(text) => setTask(text)}
@@ -24,7 +24,7 @@ const Create = ({ task, setTask, taskList, setTaskList }) => {
 			/>
 			<TouchableOpacity onPress={handleAddTask}>
 				<View style={styles.addWrapper}>
-					<FontAwesome5 name="plus" size={20} color={theme ? Colors.primary : Colors.brand} />
+					<FontAwesome5 name="plus" size={20} color={theme === 'dark' ? Colors.primary : Colors.brand} />
 				</View>
 			</TouchableOpacity>
 		</View>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-		borderColor: Colors.tertiary,
+		borderColor: Colors.darkLight,
 		zIndex: 10,
 	},
 	darkAddContainer: {
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.primary,
 		borderRadius: 60,
 		borderWidth: 1,
-		borderColor: Colors.secondary,
+		borderColor: Colors.darkLight,
 	},
 	darkInput: {
 		paddingHorizontal: 15,
