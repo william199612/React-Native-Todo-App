@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 
+import { Colors } from '../components/styles';
+import { useTheme } from '../theme/useTheme';
 import Todo from '../screens/Todo';
 import CalendarScreen from '../screens/Calendar';
 import About from '../screens/About';
@@ -12,6 +14,7 @@ import Settings from '../screens/Settings';
 const Tab = createBottomTabNavigator();
 
 const MainStack = () => {
+	const { theme } = useTheme();
 	return (
 		<Tab.Navigator
 			initialRouteName={Todo}
@@ -30,7 +33,9 @@ const MainStack = () => {
 					return <FontAwesome5 name={iconName} size={size} color={color} />;
 				},
 				tabBarShowLabel: false,
-				tabBarStyle: styles.tabBar,
+				tabBarStyle: theme === 'dark' ? styles.darkTabBar : styles.tabBar,
+				headerStyle: theme === 'dark' ? styles.darkHeader : null,
+				headerTitleStyle: theme === 'dark' ? styles.darkHeaderTitle : null,
 			})}
 		>
 			<Tab.Screen name="Today's Task" component={Todo} />
@@ -48,10 +53,32 @@ const styles = StyleSheet.create({
 		left: 20,
 		right: 20,
 		elevation: 0,
-		backgroundColor: '#fff',
+		backgroundColor: Colors.primary,
 		borderRadius: 25,
 		height: 60,
 		paddingBottom: 0,
+		borderTopWidth: 0,
+	},
+	darkTabBar: {
+		position: 'absolute',
+		bottom: 20,
+		left: 20,
+		right: 20,
+		elevation: 0,
+		backgroundColor: Colors.black,
+		borderRadius: 25,
+		height: 60,
+		paddingBottom: 0,
+		borderTopWidth: 0,
+	},
+	darkHeader: {
+		backgroundColor: Colors.tertiary,
+		borderBottomColor: Colors.darkLight,
+		borderBottomWidth: 1,
+		elevation: 0,
+	},
+	darkHeaderTitle: {
+		color: Colors.primary,
 	},
 });
 
