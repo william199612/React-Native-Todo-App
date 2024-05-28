@@ -22,7 +22,7 @@ const todos = {
 		{ description: 'Event 2', dueTime: '10:07', isCompleted: true },
 		{ description: 'Event 2', dueTime: '10:08', isCompleted: true },
 	],
-	'2024-05-16': [{ title: 'Event 3' }, { title: 'Event 4' }],
+	'2024-05-16': [{ description: 'Event 3' }, { description: 'Event 4' }],
 };
 
 const CalendarScreen = () => {
@@ -41,12 +41,12 @@ const CalendarScreen = () => {
 	return (
 		<View style={theme === 'dark' ? styles.darkContainer : styles.lightContainer}>
 			<Calendar
-				theme={theme === 'dark' ? styles.darkCalendar : null}
+				theme={theme === 'dark' ? styles.darkCalendar : styles.calendar}
 				onDayPress={handleDayPress}
 				markedDates={{ [selectedDate]: { selected: true } }}
 			/>
 			<ScrollView style={styles.scrollContainer}>
-				{items[selectedDate] && items[selectedDate].map((data, index) => <Task index={index} data={data} />)}
+				{items[selectedDate] && items[selectedDate].map((data, index) => <Task key={index} data={data} />)}
 			</ScrollView>
 		</View>
 	);
@@ -61,13 +61,26 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: Colors.tertiary,
 	},
+	calendar: {
+		backgroundColor: Colors.secondary,
+		calendarBackground: Colors.secondary,
+		textSectionTitleColor: Colors.black,
+		selectedDayBackgroundColor: Colors.brand,
+		selectedDayTextColor: Colors.primary,
+		todayTextColor: Colors.primary,
+		dayTextColor: Colors.darkLight,
+		textDisabledColor: Colors.secondary,
+		dotColor: Colors.brand,
+		selectedDotColor: Colors.black,
+		monthTextColor: Colors.black,
+	},
 	darkCalendar: {
 		backgroundColor: Colors.tertiary,
 		calendarBackground: Colors.tertiary,
 		textSectionTitleColor: Colors.primary,
 		selectedDayBackgroundColor: Colors.brand,
 		selectedDayTextColor: Colors.primary,
-		todayTextColor: Colors.primary,
+		todayTextColor: Colors.brand,
 		dayTextColor: Colors.secondary,
 		textDisabledColor: Colors.darkLight,
 		dotColor: Colors.brand,
@@ -78,6 +91,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		height: '100%',
 		paddingHorizontal: 30,
+		marginTop: 10,
 		marginBottom: 80,
 	},
 });
