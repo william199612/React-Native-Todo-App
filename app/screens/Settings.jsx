@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		textAlign: 'left',
 		width: '50%',
-		color: Colors.primary,
+		color: Colors.secondary,
 	},
 	switch: {
 		width: '50%',
@@ -92,10 +92,12 @@ const styles = StyleSheet.create({
 	},
 	lightButtonText: {
 		color: Colors.primary,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 	darkButtonText: {
-		color: Colors.black,
+		color: Colors.brand,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 });
