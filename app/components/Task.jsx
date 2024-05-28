@@ -24,7 +24,7 @@ const Task = ({ data }) => {
 				>
 					{data.description}
 				</Text>
-				<Text style={theme === 'dark' ? styles.darkTime : styles.lightTime}>{data.dueTime}</Text>
+				<Text style={theme === 'dark' ? styles.darkTime : styles.lightTime}>{data.dueTime && data.dueTime}</Text>
 			</Card.Content>
 			<Pressable style={styles.taskContainer} onPress={handleComplete}>
 				<FontAwesome5
@@ -53,7 +53,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		backgroundColor: Colors.primary,
+		borderWidth: 0.8,
 		borderRadius: 10,
+		borderColor: Colors.darkLight,
 	},
 	darkContainer: {
 		position: 'relative',
@@ -103,6 +105,7 @@ const styles = StyleSheet.create({
 		opacity: 0.5,
 	},
 	completedText: {
+		color: Colors.darkLight,
 		textDecorationLine: 'line-through',
 	},
 });
