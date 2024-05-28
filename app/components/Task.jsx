@@ -1,25 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Card, Text } from 'react-native-paper';
+import { useTheme } from '../theme/useTheme';
 import { Colors } from './styles';
 
 const Task = ({ data }) => {
+	const { theme } = useTheme();
+
 	const handleComplete = () => {
 		data.isCompleted = !data.isCompleted;
 	};
 
 	return (
-		<Card style={styles.container}>
+		<Card style={theme === 'dark' ? styles.darkContainer : styles.lightContainer}>
 			<Card.Content style={styles.item}>
-				<Text style={[styles.description, data.isCompleted && styles.completedText]}>{data.description}</Text>
-				<Text style={styles.time}>{data.dueTime}</Text>
+				<Text
+					style={
+						theme === 'dark'
+							? [styles.darkDescription, data.isCompleted && styles.completedText]
+							: [styles.lightDescription, data.isCompleted && styles.completedText]
+					}
+				>
+					{data.description}
+				</Text>
+				<Text style={theme === 'dark' ? styles.darkTime : styles.lightTime}>{data.dueTime}</Text>
 			</Card.Content>
 			<Pressable style={styles.taskContainer} onPress={handleComplete}>
 				<FontAwesome5
 					name={data.isCompleted ? 'check-circle' : 'circle'}
 					size={20}
-					color={data.isCompleted ? 'green' : 'grey'}
+					color={
+						theme === 'dark'
+							? data.isCompleted
+								? Colors.primary
+								: Colors.tertiary
+							: data.isCompleted
+							? Colors.green
+							: Colors.tertiary
+					}
 				/>
 			</Pressable>
 		</Card>
@@ -27,27 +46,50 @@ const Task = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
-	container: {
+	lightContainer: {
 		position: 'relative',
 		marginVertical: 10,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		backgroundColor: 'white',
+		backgroundColor: Colors.primary,
+		borderRadius: 10,
+	},
+	darkContainer: {
+		position: 'relative',
+		marginVertical: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		backgroundColor: Colors.brand,
 		borderRadius: 10,
 	},
 	item: {
-		width: 400,
+		width: 340,
 		padding: 20,
 	},
-	description: {
+	lightDescription: {
 		flexWrap: 'wrap',
 		width: '80%',
 		fontSize: 18,
 	},
-	time: {
-		fontSize: 14,
+	darkDescription: {
+		flexWrap: 'wrap',
+		width: '80%',
+		fontSize: 18,
+		color: Colors.primary,
+	},
+	lightTime: {
+		fontSize: 16,
 		color: Colors.tertiary,
+		fontWeight: 'bold',
+		marginTop: 10,
+		opacity: 0.5,
+	},
+	darkTime: {
+		fontSize: 16,
+		color: Colors.secondary,
+		fontWeight: 'bold',
 		marginTop: 10,
 		opacity: 0.5,
 	},

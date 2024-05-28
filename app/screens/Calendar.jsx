@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { Calendar } from 'react-native-calendars';
 
 import Task from '../components/Task';
+import { useTheme } from '../theme/useTheme';
 import { Colors } from '../components/styles';
 
 const todos = {
@@ -25,6 +26,7 @@ const todos = {
 };
 
 const CalendarScreen = () => {
+	const { theme } = useTheme();
 	const [items, setItems] = useState(todos);
 	const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
@@ -37,9 +39,12 @@ const CalendarScreen = () => {
 	};
 
 	return (
-		<View style={styles.container}>
-			<Calendar onDayPress={handleDayPress} markedDates={{ [selectedDate]: { selected: true } }} />
-			<Text>Selected Date: {selectedDate}</Text>
+		<View style={theme === 'dark' ? styles.darkContainer : styles.lightContainer}>
+			<Calendar
+				theme={theme === 'dark' ? styles.darkCalendar : null}
+				onDayPress={handleDayPress}
+				markedDates={{ [selectedDate]: { selected: true } }}
+			/>
 			<ScrollView style={styles.scrollContainer}>
 				{items[selectedDate] && items[selectedDate].map((data, index) => <Task index={index} data={data} />)}
 			</ScrollView>
@@ -48,21 +53,33 @@ const CalendarScreen = () => {
 };
 
 const styles = StyleSheet.create({
-	container: {
+	lightContainer: {
 		flex: 1,
+		backgroundColor: Colors.primary,
+	},
+	darkContainer: {
+		flex: 1,
+		backgroundColor: Colors.tertiary,
+	},
+	darkCalendar: {
+		backgroundColor: Colors.tertiary,
+		calendarBackground: Colors.tertiary,
+		textSectionTitleColor: Colors.primary,
+		selectedDayBackgroundColor: Colors.brand,
+		selectedDayTextColor: Colors.primary,
+		todayTextColor: Colors.primary,
+		dayTextColor: Colors.secondary,
+		textDisabledColor: Colors.darkLight,
+		dotColor: Colors.brand,
+		selectedDotColor: Colors.primary,
+		monthTextColor: Colors.primary,
 	},
 	scrollContainer: {
-		paddingHorizontal: 30,
-	},
-	item: {
-		backgroundColor: 'white',
 		flex: 1,
-		borderRadius: 5,
-		padding: 10,
-		marginRight: 10,
-		marginTop: 30,
+		height: '100%',
+		paddingHorizontal: 30,
+		marginBottom: 80,
 	},
-	theme: {},
 });
 
 export default CalendarScreen;
