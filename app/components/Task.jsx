@@ -29,7 +29,7 @@ const Task = ({ data }) => {
 			<Pressable style={styles.taskContainer} onPress={handleComplete}>
 				<FontAwesome5
 					name={data.isCompleted ? 'check-circle' : 'circle'}
-					size={20}
+					size={25}
 					color={
 						theme === 'dark'
 							? data.isCompleted
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	item: {
-		width: 340,
+		width: 380,
 		padding: 20,
 	},
 	lightDescription: {
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
 		top: 0,
 		bottom: 0,
 		justifyContent: 'center',
-		width: 20,
+		width: 30,
 		opacity: 0.5,
 	},
 	completedText: {
