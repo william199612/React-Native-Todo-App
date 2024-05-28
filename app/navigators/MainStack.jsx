@@ -7,7 +7,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import Todo from '../screens/Todo';
 import CalendarScreen from '../screens/Calendar';
 import About from '../screens/About';
-import Setting from '../screens/Setting';
+import Settings from '../screens/Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,7 +36,7 @@ const MainStack = () => {
 			<Tab.Screen name="Today's Task" component={Todo} />
 			<Tab.Screen name="Calendar" component={CalendarScreen} />
 			<Tab.Screen name="About" component={About} />
-			<Tab.Screen name="Settings" component={Setting} />
+			<Tab.Screen name="Settings" component={Settings} />
 		</Tab.Navigator>
 	);
 };
