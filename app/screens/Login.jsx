@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
 	subTitle: {
 		fontSize: 20,
 		marginTop: 15,
-		marginBottom: 20,
 		letterSpacing: 1,
 		fontWeight: 'bold',
 		color: Colors.tertiary,

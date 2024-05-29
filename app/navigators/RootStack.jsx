@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // context
 import { useAuth } from '../contexts/useAuth';
 // screen
+import Welcome from '../screens/Welcome';
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
 import MainStack from './MainStack';
@@ -19,10 +20,11 @@ const RootStack = () => {
 				screenOptions={{
 					headerShown: false,
 				}}
-				initialRouteName="Login"
+				initialRouteName="Welcome"
 			>
 				{!isLoggedIn ? (
 					<>
+						<Stack.Screen name="Welcome" component={Welcome} />
 						<Stack.Screen name="Login" component={Login} />
 						<Stack.Screen name="Signup" component={Signup} />
 					</>
