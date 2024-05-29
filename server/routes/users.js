@@ -1,21 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 /* GET home page. */
 router.get("/", function (req, res) {
-	res.render("user", { title: "Express" });
+	return res
+		.status(200)
+		.json({ error: false, message: "Users Route" });
 });
 
-router.get("/register", async (req, res) => {
+router.post("/register", async (req, res) => {
 	const { name, email, password, birth } = req.body;
 	const knex = req.db;
+	const salt = Number(process.env.CRYPT_SALT);
 
 	try {
-		const hash = await bcrypt.hash(
-			password,
-			process.env.CRYPT_SALT
-		);
+		const hash = await bcrypt.hash(password, salt);
 		await knex("User").insert({
 			name,
 			email,
@@ -24,13 +25,16 @@ router.get("/register", async (req, res) => {
 		});
 		return res
 			.status(200)
-			.json({ message: "User created" });
+			.json({ error: false, message: "User created" });
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		console.log(error);
+		return res
+			.status(500)
+			.json({ error: true, message: error.message });
 	}
 });
 
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
 	const knex = req.db;
 
@@ -41,7 +45,7 @@ router.get("/login", async (req, res) => {
 		if (!user) {
 			return res
 				.status(404)
-				.json({ message: "User not found" });
+				.json({ error: true, message: "User not found" });
 		}
 
 		const isMatch = await bcrypt.compare(
@@ -54,9 +58,13 @@ router.get("/login", async (req, res) => {
 				.status(401)
 				.json({ message: "Invalid credentials" });
 		}
-		res.status(200).json({ message: "Login successful" });
+		res
+			.status(200)
+			.json({ error: false, message: "Login successful" });
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		return res
+			.status(500)
+			.json({ error: true, message: error.message });
 	}
 });
 

@@ -8,9 +8,10 @@ const knex = require("knex")(db);
 const fs = require("fs");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./docs/openapi.json");
+const cors = require("cors");
 
 const indexRoute = require("./routes/index");
-const userRoute = require("./routes/user");
+const userRoute = require("./routes/users");
 const todoRoute = require("./routes/todo");
 
 const app = express();
@@ -24,6 +25,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 // Middleware setup
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

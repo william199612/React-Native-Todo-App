@@ -12,7 +12,10 @@ router.get("/", async (req, res, next) => {
 	if (!user_id) {
 		return res
 			.status(400)
-			.json({ message: "User ID is required" });
+			.json({
+				error: true,
+				message: "User ID is required",
+			});
 	}
 
 	try {
@@ -20,11 +23,19 @@ router.get("/", async (req, res, next) => {
 		if (!todos) {
 			return res
 				.status(404)
-				.json({ message: "Todo not found" });
+				.json({ error: true, message: "Todo not found" });
 		}
-		return res.status(200).json(todos);
+		return res
+			.status(200)
+			.json({
+				error: false,
+				message: "todos retrieved successfully",
+				todos,
+			});
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		return res
+			.status(500)
+			.json({ error: true, error: error.message });
 	}
 });
 
@@ -41,9 +52,17 @@ router.get("/:id", async (req, res) => {
 				.status(404)
 				.json({ message: "Todo not found" });
 		}
-		return res.status(200).json(todo);
+		return res
+			.status(200)
+			.json({
+				error: false,
+				message: "todo by id retrieved successfully",
+				todo,
+			});
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		return res
+			.status(500)
+			.json({ error: true, error: error.message });
 	}
 });
 
@@ -54,6 +73,7 @@ router.post("/", async (req, res) => {
 
 	if (!description || !user_id) {
 		return res.status(400).json({
+			error: true,
 			message: "Description and user_id are required",
 		});
 	}
@@ -67,13 +87,18 @@ router.post("/", async (req, res) => {
 		if (!id) {
 			return res
 				.status(400)
-				.json({ message: "Cannot create todo" });
+				.json({
+					error: true,
+					message: "Cannot create todo",
+				});
 		}
 		return res
 			.status(201)
-			.json({ message: "Todo created" });
+			.json({ error: false, message: "Todo created" });
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		return res
+			.status(500)
+			.json({ error: true, error: error.message });
 	}
 });
 
@@ -93,11 +118,22 @@ router.put("/", async (req, res) => {
 		if (!updated) {
 			return res
 				.status(404)
-				.json({ message: "Cannot update todo" });
+				.json({
+					error: true,
+					message: "Cannot update todo",
+				});
 		}
-		return res.status(200).json(updatedTodo);
+		return res
+			.status(200)
+			.json({
+				error: false,
+				message: "update todo successfully",
+				updatedTodo,
+			});
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		return res
+			.status(500)
+			.json({ error: true, error: error.message });
 	}
 });
 
@@ -111,13 +147,21 @@ router.delete("/", async (req, res) => {
 		if (deleted) {
 			return res
 				.status(404)
-				.json({ message: "Cannot delete todo" });
+				.json({
+					error: true,
+					message: "Cannot delete todo",
+				});
 		}
 		return res
 			.status(200)
-			.json({ message: "Todo deleted" });
+			.json({
+				error: false,
+				message: "Todo deleted successfully",
+			});
 	} catch (error) {
-		return res.status(500).json({ error: error.message });
+		return res
+			.status(500)
+			.json({ error: true, error: error.message });
 	}
 });
 
