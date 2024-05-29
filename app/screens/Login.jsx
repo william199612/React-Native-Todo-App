@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Feather, Octicons, Ionicons, Fontisto } from '@expo/vector-icons';
+import { Feather, Octicons, Ionicons } from '@expo/vector-icons';
+
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import { Colors } from '../components/styles';
+import { useAuth } from '../contexts/useAuth';
+import { useTheme } from '../contexts/useTheme';
 
 const Login = ({ navigation }) => {
+	const { setIsLoggedIn } = useAuth();
+	const { theme } = useTheme();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [hidePassword, setHidePassword] = useState(true);
 	const [message, setMessage] = useState('');
 
-	const handleLogin = (setIsSubmitting) => {
+	const handleLogin = () => {
 		const url = 'http://localhost:8080/user/login';
 
 		fetch(url, {
@@ -39,18 +44,18 @@ const Login = ({ navigation }) => {
 		navigation.navigate('Main');
 	};
 
-	const handleGoogleLogin = () => {
-		console.log('Google login...');
-	};
+	// const handleGoogleLogin = () => {
+	// 	console.log('Google login...');
+	// };
 
 	return (
 		<KeyboardAvoidingWrapper>
-			<View style={styles.container}>
+			<View style={theme === 'dark' ? styles.darkContainer : styles.container}>
 				<StatusBar style="dark" />
 				<View style={styles.innerContainer}>
 					<Feather name="check-circle" size={150} color={Colors.brand} />
 					<Text style={styles.pageTitle}>JustDo</Text>
-					<Text style={styles.subTitle}>Login</Text>
+					<Text style={theme === 'dark' ? styles.darkSubTitle : styles.subTitle}>Login</Text>
 
 					<View style={styles.formArea}>
 						{message !== null && <Text style={styles.msgBox}>{message}</Text>}
@@ -69,26 +74,22 @@ const Login = ({ navigation }) => {
 							placeholder="Enter your password..."
 							placeholderTextColor={Colors.darkLight}
 							onChangeText={setPassword}
-							onBlur={() => {}}
 							value={password}
 							secureTextEntry={hidePassword}
 							isPassword={true}
 							hidePassword={hidePassword}
 							setHidePassword={setHidePassword}
 						/>
-
-						<View style={styles.line}></View>
-
 						{!isSubmitting ? (
-							<Pressable style={styles.button} onPress={handleSubmit}>
-								<Text style={styles.buttonText}>Login</Text>
+							<Pressable style={theme === 'dark' ? styles.darkButton : styles.button} onPress={handleSubmit}>
+								<Text style={theme === 'dark' ? styles.darkButtonText : styles.buttonText}>Login</Text>
 							</Pressable>
 						) : (
-							<Pressable style={styles.button} disable={true}>
-								<ActivityIndicator size="large" color={Colors.primary} />
+							<Pressable style={theme === 'dark' ? styles.darkButton : styles.button} disable={true}>
+								<ActivityIndicator size="large" color={theme === 'dark' ? Colors.brand : Colors.primary} />
 							</Pressable>
 						)}
-
+						{/* TODO: add google login */}
 						{/* <Pressable style={styles.googleBtn} onPress={handleGoogleLogin}>
 							<View style={styles.gWrapper}>
 								<Fontisto name="google" color={Colors.primary} size={25} />
@@ -96,7 +97,7 @@ const Login = ({ navigation }) => {
 							</View>
 						</Pressable> */}
 						<View style={styles.extraView}>
-							<Text style={styles.extraText}>Don't have an account? </Text>
+							<Text style={theme === 'dark' ? styles.darkExtraText : styles.extraText}>Don't have an account? </Text>
 							<Pressable style={styles.textLink} onPress={() => navigation.navigate('Signup')}>
 								<Text style={styles.textLinkContent}>Sign up</Text>
 							</Pressable>
@@ -129,8 +130,14 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 25,
-		paddingTop: 100,
+		paddingTop: 180,
 		backgroundColor: Colors.primary,
+	},
+	darkContainer: {
+		flex: 1,
+		padding: 25,
+		paddingTop: 100,
+		backgroundColor: Colors.tertiary,
 	},
 	innerContainer: {
 		flex: 1,
@@ -151,6 +158,14 @@ const styles = StyleSheet.create({
 		letterSpacing: 1,
 		fontWeight: 'bold',
 		color: Colors.tertiary,
+	},
+	darkSubTitle: {
+		fontSize: 20,
+		marginTop: 15,
+		marginBottom: 20,
+		letterSpacing: 1,
+		fontWeight: 'bold',
+		color: Colors.primary,
 	},
 	formArea: {
 		width: '90%',
@@ -177,6 +192,12 @@ const styles = StyleSheet.create({
 		textAlign: 'left',
 		paddingLeft: 5,
 	},
+	darkInputLabel: {
+		color: Colors.secondary,
+		fontSize: 13,
+		textAlign: 'left',
+		paddingLeft: 5,
+	},
 	textInput: {
 		backgroundColor: Colors.secondary,
 		paddingVertical: 15,
@@ -194,11 +215,25 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 5,
+		marginTop: 20,
+		marginBottom: 10,
+		height: 50,
+	},
+	darkButton: {
+		padding: 10,
+		backgroundColor: Colors.secondary,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 5,
 		marginBottom: 10,
 		height: 50,
 	},
 	buttonText: {
 		color: Colors.primary,
+		fontSize: 18,
+	},
+	darkButtonText: {
+		color: Colors.brand,
 		fontSize: 18,
 	},
 	googleBtn: {
@@ -220,7 +255,6 @@ const styles = StyleSheet.create({
 	extraView: {
 		justifyContent: 'center',
 		flexDirection: 'row',
-
 		padding: 10,
 	},
 	extraText: {
@@ -229,20 +263,19 @@ const styles = StyleSheet.create({
 		color: Colors.tertiary,
 		fontSize: 15,
 	},
+	darkExtraText: {
+		justifyContent: 'center',
+		alignContent: 'center',
+		color: Colors.primary,
+		fontSize: 15,
+	},
 	textLink: {
 		justifyContent: 'center',
-		alignItems: Colors.center,
 	},
 	textLinkContent: {
 		color: Colors.brand,
+		fontWeight: 'bold',
 		fontSize: 15,
-	},
-	line: {
-		height: 1,
-		width: 100,
-		backgroundColor: Colors.darkLight,
-		marginVertical: 40,
-		alignSelf: 'center',
 	},
 });
 

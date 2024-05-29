@@ -193,6 +193,12 @@ const styles = StyleSheet.create({
 		paddingTop: 80,
 		backgroundColor: Colors.primary,
 	},
+	darkContainer: {
+		flex: 1,
+		padding: 25,
+		paddingTop: 100,
+		backgroundColor: Colors.tertiary,
+	},
 	innerContainer: {
 		flex: 1,
 		width: '100%',
@@ -212,6 +218,14 @@ const styles = StyleSheet.create({
 		letterSpacing: 1,
 		fontWeight: 'bold',
 		color: Colors.tertiary,
+	},
+	darkSubTitle: {
+		fontSize: 20,
+		marginTop: 15,
+		marginBottom: 20,
+		letterSpacing: 1,
+		fontWeight: 'bold',
+		color: Colors.primary,
 	},
 	formArea: {
 		width: '90%',
@@ -238,6 +252,12 @@ const styles = StyleSheet.create({
 		textAlign: 'left',
 		paddingLeft: 5,
 	},
+	darkInputLabel: {
+		color: Colors.secondary,
+		fontSize: 13,
+		textAlign: 'left',
+		paddingLeft: 5,
+	},
 	textInput: {
 		backgroundColor: Colors.secondary,
 		paddingVertical: 15,
@@ -259,14 +279,26 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		height: 50,
 	},
+	darkButton: {
+		padding: 10,
+		backgroundColor: Colors.secondary,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 5,
+		marginBottom: 10,
+		height: 50,
+	},
 	buttonText: {
 		color: Colors.primary,
+		fontSize: 18,
+	},
+	darkButtonText: {
+		color: Colors.brand,
 		fontSize: 18,
 	},
 	extraView: {
 		justifyContent: 'center',
 		flexDirection: 'row',
-		alignItems: 'center',
 		padding: 10,
 	},
 	extraText: {
@@ -275,12 +307,18 @@ const styles = StyleSheet.create({
 		color: Colors.tertiary,
 		fontSize: 15,
 	},
+	darkExtraText: {
+		justifyContent: 'center',
+		alignContent: 'center',
+		color: Colors.primary,
+		fontSize: 15,
+	},
 	textLink: {
 		justifyContent: 'center',
-		alignItems: Colors.center,
 	},
 	textLinkContent: {
 		color: Colors.brand,
+		fontWeight: 'bold',
 		fontSize: 15,
 	},
 });
