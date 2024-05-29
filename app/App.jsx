@@ -1,11 +1,14 @@
 import React from 'react';
-import { ThemeProvider } from './theme/useTheme';
+import { AuthProvider } from './contexts/useAuth';
+import { ThemeProvider } from './contexts/useTheme';
 import RootStack from './navigators/RootStack';
 
 export default function App() {
 	return (
-		<ThemeProvider>
-			<RootStack />
-		</ThemeProvider>
+		<AuthProvider>
+			<ThemeProvider>
+				<RootStack />
+			</ThemeProvider>
+		</AuthProvider>
 	);
 }

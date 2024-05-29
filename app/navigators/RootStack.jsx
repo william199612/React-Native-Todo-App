@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+// context
+import { useAuth } from '../contexts/useAuth';
 // screen
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
@@ -10,7 +12,7 @@ import MainStack from './MainStack';
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
-	const [isLoggedIn, , setIsLoggedIn] = useState(true);
+	const { isLoggedIn } = useAuth();
 	return (
 		<NavigationContainer>
 			<Stack.Navigator
