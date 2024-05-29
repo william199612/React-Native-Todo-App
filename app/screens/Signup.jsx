@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
-import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import { Formik } from 'formik';
 import { Octicons, Ionicons } from '@expo/vector-icons';
+
+import { useTheme } from '../contexts/useTheme';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import { Colors } from '../components/styles';
 
-const StatusBarHeight = Constants.statusBarHeight;
-
 const Signup = ({ navigation }) => {
+	const { theme } = useTheme();
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
-	const [birth, setBirth] = useState('');
+	const [birth, setBirth] = useState('1996-12-14');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -28,7 +27,12 @@ const Signup = ({ navigation }) => {
 			return;
 		}
 
-		const url = 'http://localhost:8080/user/register';
+		if (name === '' || email === '' || birth === '' || password === '') {
+			setMessage('All fiends are required.');
+			return;
+		}
+
+		const url = 'http://localhost:8080/users/register';
 
 		fetch(url, {
 			method: 'POST',
@@ -43,10 +47,24 @@ const Signup = ({ navigation }) => {
 			}),
 		})
 			.then((response) => {
-				setIsLoggedIn(true);
+				if (response.status === 200) {
+					setMessage('Signup successfully! Redirecting to Login page.');
+					setTimeout(() => {
+						navigation.navigate('Login');
+					}, '1500');
+				} else {
+					setMessage(response.message);
+					setTimeout(() => {
+						setMessage('');
+					}, '1500');
+				}
 			})
 			.catch((error) => {
-				setMessage(error);
+				console.error('Fetch error:', error);
+				setMessage('An error occurred. Please try again.');
+				setTimeout(() => {
+					setMessage('');
+				}, '1500');
 			});
 	};
 
@@ -82,15 +100,13 @@ const Signup = ({ navigation }) => {
 
 					<View style={styles.innerContainer}>
 						<View style={styles.formArea}>
-							{message !== null && <Text style={styles.msgBox}>{message}</Text>}
 							<LoginTextInput
 								label="Full Name"
 								icon="person"
 								placeholder="Enter your name..."
 								placeholderTextColor={Colors.darkLight}
 								onChangeText={setName}
-								value={email}
-								keyboardType="email-address"
+								value={name}
 							/>
 							<LoginTextInput
 								label="Email Address"
@@ -137,8 +153,8 @@ const Signup = ({ navigation }) => {
 								hidePassword={hidePassword}
 								setHidePassword={setHidePassword}
 							/>
-
-							<Pressable style={styles.button} onSubmit={handleSubmit}>
+							{message !== null && <Text style={styles.msgBox}>{message}</Text>}
+							<Pressable style={styles.button} onPress={handleSubmit}>
 								<Text style={styles.buttonText}>Signup</Text>
 							</Pressable>
 							<View style={styles.extraView}>
@@ -190,13 +206,13 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		paddingTop: 80,
+		paddingTop: 60,
 		backgroundColor: Colors.primary,
 	},
 	darkContainer: {
 		flex: 1,
 		padding: 25,
-		paddingTop: 100,
+		paddingTop: 60,
 		backgroundColor: Colors.tertiary,
 	},
 	innerContainer: {
@@ -242,7 +258,7 @@ const styles = StyleSheet.create({
 	},
 	rightIcon: {
 		right: 15,
-		top: 35,
+		top: 30,
 		position: 'absolute',
 		zIndex: 1,
 	},

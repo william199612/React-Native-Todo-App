@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Feather, Octicons, Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/useAuth';
 import { useTheme } from '../contexts/useTheme';
 
 const Login = ({ navigation }) => {
-	const { setIsLoggedIn } = useAuth();
+	const { setIsLoggedIn, currentUser, setCurrentUser } = useAuth();
 	const { theme } = useTheme();
 
 	const [email, setEmail] = useState('');
@@ -18,30 +18,53 @@ const Login = ({ navigation }) => {
 	const [hidePassword, setHidePassword] = useState(true);
 	const [message, setMessage] = useState('');
 
-	const handleLogin = () => {
-		const url = 'http://localhost:8080/user/login';
+	const fetchData = () => {
+		const url = 'http://localhost:8080/users/login';
+
+		setIsSubmitting(true);
 
 		fetch(url, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
 			},
 			body: JSON.stringify({
 				email,
 				password,
 			}),
 		})
-			.then((response) => {
-				setIsLoggedIn(true);
+			.then((response) => response.json())
+			.then((result) => {
+				if (result.error === false) {
+					setMessage('Login successfully! Redirecting to home page.');
+					setTimeout(() => {
+						setMessage('');
+						setCurrentUser(result.user.id);
+						setIsSubmitting(false);
+						setIsLoggedIn(true);
+					}, 1000);
+				} else {
+					setMessage(result.message);
+					setIsSubmitting(false);
+					setTimeout(() => {
+						setMessage('');
+					}, 3000);
+				}
 			})
 			.catch((error) => {
-				setMessage(error);
+				console.error('Fetch error:', error);
+				setMessage('An error occurred. Please try again.');
+				setTimeout(() => {
+					setIsSubmitting(false);
+					setMessage('');
+				}, 3000);
 			});
-		setIsSubmitting(false);
 	};
 
 	const handleSubmit = () => {
-		navigation.navigate('Main');
+		console.log('Submitting...');
+		fetchData();
 	};
 
 	// const handleGoogleLogin = () => {
@@ -58,7 +81,6 @@ const Login = ({ navigation }) => {
 					<Text style={theme === 'dark' ? styles.darkSubTitle : styles.subTitle}>Login</Text>
 
 					<View style={styles.formArea}>
-						{message !== null && <Text style={styles.msgBox}>{message}</Text>}
 						<LoginTextInput
 							label="Email Address"
 							icon="mail"
@@ -80,6 +102,7 @@ const Login = ({ navigation }) => {
 							hidePassword={hidePassword}
 							setHidePassword={setHidePassword}
 						/>
+						{message !== '' && <Text style={styles.msgBox}>{message}</Text>}
 						{!isSubmitting ? (
 							<Pressable style={theme === 'dark' ? styles.darkButton : styles.button} onPress={handleSubmit}>
 								<Text style={theme === 'dark' ? styles.darkButtonText : styles.buttonText}>Login</Text>
@@ -130,7 +153,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 25,
-		paddingTop: 180,
+		paddingTop: 100,
 		backgroundColor: Colors.primary,
 	},
 	darkContainer: {
@@ -153,7 +176,7 @@ const styles = StyleSheet.create({
 	},
 	subTitle: {
 		fontSize: 20,
-		marginTop: 15,
+		marginVertical: 10,
 		letterSpacing: 1,
 		fontWeight: 'bold',
 		color: Colors.tertiary,
@@ -181,7 +204,7 @@ const styles = StyleSheet.create({
 	},
 	rightIcon: {
 		right: 15,
-		top: 35,
+		top: 30,
 		position: 'absolute',
 		zIndex: 1,
 	},
