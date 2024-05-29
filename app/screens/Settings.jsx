@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Switch, Pressable, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../contexts/useTheme';
 import { Colors } from '../components/styles';
 
 // TODO: add global theme button

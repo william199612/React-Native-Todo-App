@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { Calendar } from 'react-native-calendars';
 
 import Task from '../components/Task';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../contexts/useTheme';
 import { Colors } from '../components/styles';
 
 const todos = {

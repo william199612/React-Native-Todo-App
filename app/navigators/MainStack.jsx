@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import { Colors } from '../components/styles';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../contexts/useTheme';
 import Todo from '../screens/Todo';
 import CalendarScreen from '../screens/Calendar';
 import About from '../screens/About';

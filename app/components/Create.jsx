@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TouchableOpacity, View, TextInput, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../contexts/useTheme';
 import { Colors } from './styles';
 
 const Create = ({ task, setTask, taskList, setTaskList }) => {

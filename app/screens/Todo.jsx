@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 
 import { Colors } from '../components/styles';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../contexts/useTheme';
 import Task from '../components/Task';
 import Create from '../components/Create';
 
@@ -29,6 +29,26 @@ const Todo = () => {
 	const { theme } = useTheme();
 	const [task, setTask] = useState();
 	const [taskList, setTaskList] = useState([]);
+
+	const url = 'http://127.0.0.1:8080/todos';
+
+	const fetchData = () => {
+		fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((response) => response.json())
+			.then((responseJson) => {
+				console.log(responseJson);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	fetchData();
 
 	return (
 		<View style={theme === 'dark' ? styles.darkTasksWrapper : styles.lightTasksWrapper}>

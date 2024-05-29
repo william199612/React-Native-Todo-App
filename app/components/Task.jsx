@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Card, Text } from 'react-native-paper';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../contexts/useTheme';
 import { Colors } from './styles';
 
 const Task = ({ data }) => {
