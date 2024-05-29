@@ -1,37 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
-// GET user todos
-router.get("/", async (req, res, next) => {
-	const user_id =
-		req.body.userId ||
-		req.query.userId ||
-		req.headers["user-id"];
+// GET todos by user_id
+router.get("/:user_id", async (req, res, next) => {
+	const { user_id } = req.params;
 	const knex = req.db;
-
-	if (!user_id) {
-		return res
-			.status(400)
-			.json({
-				error: true,
-				message: "User ID is required",
-			});
-	}
 
 	try {
 		const todos = await knex("Todo").where({ user_id });
-		if (!todos) {
-			return res
-				.status(404)
-				.json({ error: true, message: "Todo not found" });
-		}
-		return res
-			.status(200)
-			.json({
-				error: false,
-				message: "todos retrieved successfully",
-				todos,
-			});
+		return res.status(200).json({
+			error: false,
+			message: "todos retrieved successfully",
+			todos,
+		});
 	} catch (error) {
 		return res
 			.status(500)
@@ -52,13 +33,11 @@ router.get("/:id", async (req, res) => {
 				.status(404)
 				.json({ message: "Todo not found" });
 		}
-		return res
-			.status(200)
-			.json({
-				error: false,
-				message: "todo by id retrieved successfully",
-				todo,
-			});
+		return res.status(200).json({
+			error: false,
+			message: "todo by id retrieved successfully",
+			todo,
+		});
 	} catch (error) {
 		return res
 			.status(500)
@@ -85,12 +64,10 @@ router.post("/", async (req, res) => {
 			user_id,
 		});
 		if (!id) {
-			return res
-				.status(400)
-				.json({
-					error: true,
-					message: "Cannot create todo",
-				});
+			return res.status(400).json({
+				error: true,
+				message: "Cannot create todo",
+			});
 		}
 		return res
 			.status(201)
@@ -116,20 +93,16 @@ router.put("/", async (req, res) => {
 				completed,
 			});
 		if (!updated) {
-			return res
-				.status(404)
-				.json({
-					error: true,
-					message: "Cannot update todo",
-				});
-		}
-		return res
-			.status(200)
-			.json({
-				error: false,
-				message: "update todo successfully",
-				updatedTodo,
+			return res.status(404).json({
+				error: true,
+				message: "Cannot update todo",
 			});
+		}
+		return res.status(200).json({
+			error: false,
+			message: "update todo successfully",
+			updatedTodo,
+		});
 	} catch (error) {
 		return res
 			.status(500)
@@ -145,19 +118,15 @@ router.delete("/", async (req, res) => {
 	try {
 		const deleted = await knex("Todo").where({ id }).del();
 		if (deleted) {
-			return res
-				.status(404)
-				.json({
-					error: true,
-					message: "Cannot delete todo",
-				});
-		}
-		return res
-			.status(200)
-			.json({
-				error: false,
-				message: "Todo deleted successfully",
+			return res.status(404).json({
+				error: true,
+				message: "Cannot delete todo",
 			});
+		}
+		return res.status(200).json({
+			error: false,
+			message: "Todo deleted successfully",
+		});
 	} catch (error) {
 		return res
 			.status(500)
