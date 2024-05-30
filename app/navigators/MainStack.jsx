@@ -53,11 +53,10 @@ const styles = StyleSheet.create({
 		left: 20,
 		right: 20,
 		elevation: 0,
-		backgroundColor: Colors.primary,
+		backgroundColor: Colors.secondary,
 		borderRadius: 25,
 		height: 60,
 		paddingBottom: 0,
-		borderTopWidth: 0,
 	},
 	darkTabBar: {
 		position: 'absolute',
