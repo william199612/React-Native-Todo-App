@@ -1,45 +1,135 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { Card, Text } from 'react-native-paper';
 import { useTheme } from '../contexts/useTheme';
 import { Colors } from './styles';
 
-const Task = ({ data }) => {
+const Task = ({ data, setRefresh }) => {
 	const { theme } = useTheme();
+	const [timeLeft, setTimeLeft] = useState('');
+	const [message, setMessage] = useState('');
+
+	const formatDate = (date) => {
+		const dateObj = new Date(date);
+		const hours = String(dateObj.getHours()).padStart(2, '0');
+		const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+		return `${hours}:${minutes}`;
+	};
+
+	const calculateTimeLeft = (dueDate) => {
+		const due = new Date(dueDate);
+		const now = new Date();
+		const diff = (due - now) / 60000; // Difference in minutes
+
+		if (data.completed) return 'Done!';
+		if (diff == 0) return 'Due now';
+		if (diff <= 0) return 'Over due time';
+
+		const hours = Math.floor(diff / 60);
+		const minutes = Math.floor(diff % 60);
+
+		if (hours === 0) return `${minutes}min left`;
+		else return `${hours}hr ${minutes}min left`;
+	};
 
 	const handleComplete = () => {
-		data.isCompleted = !data.isCompleted;
+		const url = `http://10.0.2.2:8080/todos/${data.id}`;
+
+		fetch(url, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+			body: JSON.stringify({
+				completed: !data.completed,
+			}),
+		})
+			.then((response) => response.json())
+			.then((result) => {
+				if (result !== null) {
+					console.log(result);
+					setRefresh((prev) => !prev);
+				} else {
+					setMessage('Something went wrong. Please try again later.');
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+				setMessage('Something went wrong. Please try again later.');
+			});
 	};
+
+	const handleDelete = () => {
+		const url = `http://10.0.2.2:8080/todos/${data.id}`;
+
+		fetch(url, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+		})
+			.then((response) => response.json())
+			.then((result) => {
+				if (result.error == false) {
+					console.log(result);
+					setRefresh((prev) => !prev);
+				} else {
+					setMessage('Something went wrong. Please try again later.');
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+				setMessage('Something went wrong. Please try again later.');
+			});
+	};
+
+	useEffect(() => {
+		const updateDueTime = () => {
+			setTimeLeft(calculateTimeLeft(data.due_date));
+		};
+		updateDueTime();
+
+		const intervalId = setInterval(updateDueTime, 60000);
+		return () => clearInterval(intervalId);
+	}, [timeLeft]);
 
 	return (
 		<Card style={theme === 'dark' ? styles.darkContainer : styles.lightContainer}>
-			<Card.Content style={styles.item}>
-				<Text
-					style={
-						theme === 'dark'
-							? [styles.darkDescription, data.isCompleted && styles.completedText]
-							: [styles.lightDescription, data.isCompleted && styles.completedText]
-					}
-				>
-					{data.description}
-				</Text>
-				<Text style={theme === 'dark' ? styles.darkTime : styles.lightTime}>{data.dueTime && data.dueTime}</Text>
-			</Card.Content>
 			<Pressable style={styles.taskContainer} onPress={handleComplete}>
 				<FontAwesome5
-					name={data.isCompleted ? 'check-circle' : 'circle'}
+					name={data.completed ? 'check-circle' : 'circle'}
 					size={25}
 					color={
 						theme === 'dark'
-							? data.isCompleted
+							? data.completed
 								? Colors.primary
 								: Colors.tertiary
-							: data.isCompleted
+							: data.completed
 							? Colors.green
 							: Colors.tertiary
 					}
 				/>
+			</Pressable>
+			<Card.Content style={styles.item}>
+				<Text
+					style={
+						theme === 'dark'
+							? [styles.darkDescription, data.completed && styles.completedText]
+							: [styles.lightDescription, data.completed && styles.completedText]
+					}
+				>
+					{data.description}
+				</Text>
+				<Text style={styles.lightTime}>
+					{data.due_date && `Due: ${formatDate(data.due_date)}`}
+					<Text style={styles.leftTime}>{`    ${calculateTimeLeft(data.due_date)}`}</Text>
+				</Text>
+			</Card.Content>
+			<Pressable style={styles.deleteContainer} onPress={handleDelete}>
+				<AntDesign name="delete" size={25} color={Colors.red} />
 			</Pressable>
 		</Card>
 	);
@@ -67,42 +157,51 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	item: {
-		width: 380,
-		padding: 20,
+		width: 350,
+		paddingVertical: 20,
+		paddingLeft: 60,
 	},
 	lightDescription: {
 		flexWrap: 'wrap',
 		width: '80%',
 		fontSize: 18,
+		fontWeight: 'bold',
+		color: Colors.brand,
 	},
 	darkDescription: {
 		flexWrap: 'wrap',
 		width: '80%',
 		fontSize: 18,
+		fontWeight: 'bold',
 		color: Colors.primary,
 	},
 	lightTime: {
 		fontSize: 16,
-		color: Colors.tertiary,
+		color: Colors.black,
 		fontWeight: 'bold',
 		marginTop: 10,
-		opacity: 0.5,
 	},
-	darkTime: {
-		fontSize: 16,
-		color: Colors.secondary,
+	leftTime: {
+		fontSize: 14,
+		color: Colors.darkLight,
 		fontWeight: 'bold',
-		marginTop: 10,
-		opacity: 0.5,
 	},
 	taskContainer: {
 		position: 'absolute',
-		right: 10,
+		left: 20,
 		top: 0,
 		bottom: 0,
 		justifyContent: 'center',
 		width: 30,
-		opacity: 0.5,
+	},
+	deleteContainer: {
+		position: 'absolute',
+		right: 20,
+		top: 0,
+		bottom: 0,
+		justifyContent: 'center',
+		width: 30,
+		opacity: 0.8,
 	},
 	completedText: {
 		color: Colors.darkLight,
