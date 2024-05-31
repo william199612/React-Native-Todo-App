@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Switch, Pressable, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../contexts/useTheme';
+import { useAuth } from '../contexts/useAuth';
 import { Colors } from '../components/styles';
 
-// TODO: add global theme button
-const Settings = ({ navigation }) => {
+const Settings = () => {
 	const { theme, toggleTheme } = useTheme();
+	const { setIsLoggedIn } = useAuth();
+	const [message, setMessage] = useState(null);
 
 	const handleLogout = () => {
-		navigation.navigate('Login');
+		setMessage('Loging out');
+		setTimeout(() => {
+			setMessage(null);
+			setIsLoggedIn(false);
+		}, 1000);
 	};
 
 	return (
 		<View style={theme === 'dark' ? styles.darkContainer : styles.lightContainer}>
 			<StatusBar style="dark" />
+			{message && <Text style={styles.msg}>{message}</Text>}
 			<View style={styles.innerContainer}>
 				<View style={styles.modeWrapper}>
 					<Text style={theme === 'dark' ? styles.darkText : styles.lightText}>Dark Mode</Text>
@@ -99,6 +106,17 @@ const styles = StyleSheet.create({
 		color: Colors.brand,
 		fontWeight: 'bold',
 		fontSize: 18,
+	},
+	msg: {
+		fontSize: 14,
+		fontWeight: 'bold',
+		textAlign: 'center',
+		color: Colors.tertiary,
+		padding: 10,
+		marginBottom: 20,
+		position: 'absolute',
+		bottom: 160,
+		left: 160,
 	},
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
 import Task from '../components/Task';
@@ -12,7 +12,7 @@ const CalendarScreen = () => {
 	const { currentUser } = useAuth();
 	const [items, setItems] = useState([]);
 	const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-	const [refresh, setRefresh] = useState(false);
+	const [calendarRefresh, setCalendarRefresh] = useState(false);
 	const [message, setMessage] = useState('');
 
 	useEffect(() => {
@@ -28,6 +28,7 @@ const CalendarScreen = () => {
 				.then((response) => response.json())
 				.then((result) => {
 					if (result.error !== false) {
+						console.log(result);
 						const filteredTasks = result.todos.filter((todo) => {
 							const taskDate = new Date(todo.due_date).toISOString().split('T')[0];
 							return taskDate === selectedDate;
@@ -42,10 +43,11 @@ const CalendarScreen = () => {
 				});
 		};
 		fetchData();
-	}, [selectedDate, refresh]);
+	}, [selectedDate, calendarRefresh]);
 
 	const handleDayPress = (date) => {
 		setSelectedDate(date.dateString);
+		console.log(selectedDate);
 	};
 
 	return (
@@ -56,7 +58,7 @@ const CalendarScreen = () => {
 				markedDates={{ [selectedDate]: { selected: true } }}
 			/>
 			<ScrollView style={styles.scrollContainer}>
-				{items && items.map((data, index) => <Task key={index} data={data} setRefresh={setRefresh} />)}
+				{items && items.map((data, index) => <Task key={index} data={data} setCalendarRefresh={setCalendarRefresh} />)}
 			</ScrollView>
 		</View>
 	);

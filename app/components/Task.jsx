@@ -5,7 +5,7 @@ import { Card, Text } from 'react-native-paper';
 import { useTheme } from '../contexts/useTheme';
 import { Colors } from './styles';
 
-const Task = ({ data, setRefresh }) => {
+const Task = ({ data, setRefresh, calendarRefresh }) => {
 	const { theme } = useTheme();
 	const [timeLeft, setTimeLeft] = useState('');
 	const [message, setMessage] = useState('');
@@ -49,8 +49,9 @@ const Task = ({ data, setRefresh }) => {
 			.then((response) => response.json())
 			.then((result) => {
 				if (result !== null) {
-					// console.log(result);
+					console.log(result);
 					setRefresh((prev) => !prev);
+					calendarRefresh((prev) => !prev);
 				} else {
 					setMessage('Something went wrong. Please try again later.');
 				}

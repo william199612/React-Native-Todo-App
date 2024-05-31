@@ -32,9 +32,8 @@ const Todo = () => {
 			})
 				.then((response) => response.json())
 				.then((result) => {
-					if (result !== null) {
-						// console.log(result);
-
+					if (result !== false) {
+						console.log(result);
 						const currentDate = new Date().toISOString().split('T')[0];
 						const filteredTasks = result.todos.filter((todo) => {
 							const taskDate = new Date(todo.due_date).toISOString().split('T')[0];
