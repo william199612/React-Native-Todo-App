@@ -12,27 +12,39 @@ const Signup = ({ navigation }) => {
 	const { theme } = useTheme();
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
-	const [birth, setBirth] = useState('1996-12-14');
+	const [date, setDate] = useState(new Date());
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
 	const [hidePassword, setHidePassword] = useState(true);
 	const [show, setShow] = useState(false);
-	const [date, setDate] = useState(new Date());
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useState(null);
+
+	const dateConvertor = (date) => {
+		const dateString = new Date(date).toDateString();
+		const parsedDate = new Date(dateString);
+		const isoString = parsedDate.toISOString();
+		return isoString.replace('T', ' ').replace('Z', '');
+	};
 
 	const handleSubmit = () => {
 		if (password !== confirmPassword) {
 			setMessage('Passwords do not match');
+			setTimeout(() => {
+				setMessage(null);
+			}, 1500);
 			return;
 		}
 
-		if (name === '' || email === '' || birth === '' || password === '') {
+		if (name === '' || email === '' || date === '' || password === '') {
 			setMessage('All fiends are required.');
+			setTimeout(() => {
+				setMessage(null);
+			}, 1500);
 			return;
 		}
 
-		const url = 'http://localhost:8080/users/register';
+		const url = 'http://10.0.2.2:8080/users/register';
 
 		fetch(url, {
 			method: 'POST',
@@ -42,7 +54,7 @@ const Signup = ({ navigation }) => {
 			body: JSON.stringify({
 				name,
 				email,
-				birth,
+				birth: dateConvertor(date),
 				password,
 			}),
 		})
@@ -51,12 +63,13 @@ const Signup = ({ navigation }) => {
 					setMessage('Signup successfully! Redirecting to Login page.');
 					setTimeout(() => {
 						navigation.navigate('Login');
-					}, '1500');
+					}, 1500);
 				} else {
-					setMessage(response.message);
+					console.error('Server error:', result.error);
+					setMessage('An error occurred. Please try again.');
 					setTimeout(() => {
-						setMessage('');
-					}, '1500');
+						setMessage(null);
+					}, 1500);
 				}
 			})
 			.catch((error) => {
@@ -64,15 +77,15 @@ const Signup = ({ navigation }) => {
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
 					setMessage('');
-				}, '1500');
+				}, 1500);
 			});
 	};
 
 	const onChange = (event, selectedDate) => {
 		const currentDate = selectedDate || date;
 		setShow(false);
+		console.log(currentDate);
 		setDate(currentDate);
-		setBirth(currentDate);
 	};
 
 	const showDatePicker = () => {
@@ -81,11 +94,11 @@ const Signup = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingWrapper>
-			<View style={styles.container}>
-				<StatusBar style="dark" />
+			<View style={theme === 'dark' ? styles.darkContainer : styles.container}>
+				<StatusBar style={theme} />
 				<View style={styles.innerContainer}>
 					<Text style={styles.pageTitle}>JustDo</Text>
-					<Text style={styles.subTitle}>Account Signup</Text>
+					<Text style={theme === 'dark' ? styles.darkSubTitle : styles.subTitle}>Account Signup</Text>
 
 					{show && (
 						<DateTimePicker
@@ -107,6 +120,7 @@ const Signup = ({ navigation }) => {
 								placeholderTextColor={Colors.darkLight}
 								onChangeText={setName}
 								value={name}
+								theme={theme}
 							/>
 							<LoginTextInput
 								label="Email Address"
@@ -116,17 +130,19 @@ const Signup = ({ navigation }) => {
 								onChangeText={setEmail}
 								value={email}
 								keyboardType="email-address"
+								theme={theme}
 							/>
 							<LoginTextInput
 								label="Date of Birth"
 								icon="calendar"
 								placeholder="YYYY-MM-DD"
 								placeholderTextColor={Colors.darkLight}
-								onChangeText={setBirth}
-								value={birth}
+								onChangeText={setDate}
+								value={date.toDateString()}
 								isDate={true}
 								editable={false}
 								showDatePicker={showDatePicker}
+								theme={theme}
 							/>
 							<LoginTextInput
 								label="Password"
@@ -139,6 +155,7 @@ const Signup = ({ navigation }) => {
 								isPassword={true}
 								hidePassword={hidePassword}
 								setHidePassword={setHidePassword}
+								theme={theme}
 							/>
 
 							<LoginTextInput
@@ -152,13 +169,16 @@ const Signup = ({ navigation }) => {
 								isPassword={true}
 								hidePassword={hidePassword}
 								setHidePassword={setHidePassword}
+								theme={theme}
 							/>
-							{message !== null && <Text style={styles.msgBox}>{message}</Text>}
-							<Pressable style={styles.button} onPress={handleSubmit}>
-								<Text style={styles.buttonText}>Signup</Text>
+							{message !== null && <Text style={theme === 'dark' ? styles.darkMsgBox : styles.msgBox}>{message}</Text>}
+							<Pressable style={theme === 'dark' ? styles.darkButton : styles.button} onPress={handleSubmit}>
+								<Text style={theme === 'dark' ? styles.darkButtonText : styles.buttonText}>Signup</Text>
 							</Pressable>
 							<View style={styles.extraView}>
-								<Text style={styles.extraText}>Already have an account? </Text>
+								<Text style={theme === 'dark' ? styles.darkExtraText : styles.extraText}>
+									Already have an account?{' '}
+								</Text>
 								<Pressable style={styles.textLink} onPress={() => navigation.navigate('Login')}>
 									<Text style={styles.textLinkContent}>Login</Text>
 								</Pressable>
@@ -179,6 +199,7 @@ const LoginTextInput = ({
 	setHidePassword,
 	isDate,
 	showDatePicker,
+	theme,
 	...props
 }) => {
 	return (
@@ -186,7 +207,7 @@ const LoginTextInput = ({
 			<View style={styles.leftIcon}>
 				<Octicons name={icon} size={30} color={Colors.brand} />
 			</View>
-			<Text style={styles.inputLabel}>{label}</Text>
+			<Text style={theme === 'dark' ? styles.darkInputLabel : styles.inputLabel}>{label}</Text>
 			{!isDate && <TextInput style={styles.textInput} {...props} />}
 			{isDate && (
 				<Pressable onPress={showDatePicker}>
@@ -194,9 +215,9 @@ const LoginTextInput = ({
 				</Pressable>
 			)}
 			{isPassword && (
-				<View style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
+				<Pressable style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
 					<Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color={Colors.darkLight} />
-				</View>
+				</Pressable>
 			)}
 		</View>
 	);
@@ -206,13 +227,13 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		paddingTop: 60,
+		paddingTop: 80,
 		backgroundColor: Colors.primary,
 	},
 	darkContainer: {
 		flex: 1,
 		padding: 25,
-		paddingTop: 60,
+		paddingTop: 80,
 		backgroundColor: Colors.tertiary,
 	},
 	innerContainer: {
@@ -250,6 +271,11 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontSize: 14,
 	},
+	darkMsgBox: {
+		textAlign: 'center',
+		fontSize: 14,
+		color: Colors.primary,
+	},
 	leftIcon: {
 		left: 15,
 		top: 35,
@@ -258,7 +284,7 @@ const styles = StyleSheet.create({
 	},
 	rightIcon: {
 		right: 15,
-		top: 30,
+		top: 35,
 		position: 'absolute',
 		zIndex: 1,
 	},
@@ -306,10 +332,12 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		color: Colors.primary,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 	darkButtonText: {
 		color: Colors.brand,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 	extraView: {

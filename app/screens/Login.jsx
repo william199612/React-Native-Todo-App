@@ -16,7 +16,7 @@ const Login = ({ navigation }) => {
 	const [password, setPassword] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [hidePassword, setHidePassword] = useState(true);
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useState(null);
 
 	const fetchData = () => {
 		const url = 'http://10.0.2.2:8080/users/login';
@@ -36,10 +36,10 @@ const Login = ({ navigation }) => {
 		})
 			.then((response) => response.json())
 			.then((result) => {
-				if (result.error === false) {
+				if (result.status === 200) {
 					setMessage('Login successfully! Redirecting to home page.');
 					setTimeout(() => {
-						setMessage('');
+						setMessage(null);
 						setCurrentUser(result.user.id);
 						setIsSubmitting(false);
 						setIsLoggedIn(true);
@@ -48,7 +48,7 @@ const Login = ({ navigation }) => {
 					setMessage(result.message);
 					setIsSubmitting(false);
 					setTimeout(() => {
-						setMessage('');
+						setMessage(null);
 					}, 3000);
 				}
 			})
@@ -57,7 +57,7 @@ const Login = ({ navigation }) => {
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
 					setIsSubmitting(false);
-					setMessage('');
+					setMessage(null);
 				}, 3000);
 			});
 	};
@@ -89,6 +89,7 @@ const Login = ({ navigation }) => {
 							onChangeText={setEmail}
 							value={email}
 							keyboardType="email-address"
+							theme={theme}
 						/>
 						<LoginTextInput
 							label="Password"
@@ -101,8 +102,9 @@ const Login = ({ navigation }) => {
 							isPassword={true}
 							hidePassword={hidePassword}
 							setHidePassword={setHidePassword}
+							theme={theme}
 						/>
-						{message !== '' && <Text style={styles.msgBox}>{message}</Text>}
+						{message && <Text style={theme === 'dark' ? styles.darkMsgBox : styles.msgBox}>{message}</Text>}
 						{!isSubmitting ? (
 							<Pressable style={theme === 'dark' ? styles.darkButton : styles.button} onPress={handleSubmit}>
 								<Text style={theme === 'dark' ? styles.darkButtonText : styles.buttonText}>Login</Text>
@@ -132,13 +134,13 @@ const Login = ({ navigation }) => {
 	);
 };
 
-const LoginTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
+const LoginTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, theme, ...props }) => {
 	return (
 		<View>
 			<View style={styles.leftIcon}>
 				<Octicons name={icon} size={30} color={Colors.brand} />
 			</View>
-			<Text style={styles.inputLabel}>{label}</Text>
+			<Text style={theme === 'dark' ? styles.darkInputLabel : styles.inputLabel}>{label}</Text>
 			<TextInput style={styles.textInput} {...props} />
 			{isPassword && (
 				<Pressable style={styles.rightIcon} onPress={() => setHidePassword(!hidePassword)}>
@@ -153,13 +155,13 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 25,
-		paddingTop: 100,
+		paddingTop: 140,
 		backgroundColor: Colors.primary,
 	},
 	darkContainer: {
 		flex: 1,
 		padding: 25,
-		paddingTop: 100,
+		paddingTop: 140,
 		backgroundColor: Colors.tertiary,
 	},
 	innerContainer: {
@@ -196,6 +198,11 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontSize: 14,
 	},
+	darkMsgBox: {
+		textAlign: 'center',
+		fontSize: 14,
+		color: Colors.primary,
+	},
 	leftIcon: {
 		left: 15,
 		top: 35,
@@ -204,7 +211,7 @@ const styles = StyleSheet.create({
 	},
 	rightIcon: {
 		right: 15,
-		top: 30,
+		top: 35,
 		position: 'absolute',
 		zIndex: 1,
 	},
@@ -247,15 +254,18 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 5,
+		marginTop: 20,
 		marginBottom: 10,
 		height: 50,
 	},
 	buttonText: {
 		color: Colors.primary,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 	darkButtonText: {
 		color: Colors.brand,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 	googleBtn: {

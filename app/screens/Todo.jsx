@@ -8,18 +8,13 @@ import Task from '../components/Task';
 import Create from '../components/Create';
 
 const Todo = () => {
-	const { currentUser, setCurrentUser } = useAuth();
+	const { currentUser } = useAuth();
 	const { theme } = useTheme();
 	const [todayTask, setTodayTask] = useState([]);
-	const [error, setError] = useState(null);
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useState(null);
 	const [refresh, setRefresh] = useState(false);
 
 	const url = 'http://10.0.2.2:8080/todos';
-
-	useEffect(() => {
-		setCurrentUser(1);
-	}, [setCurrentUser]);
 
 	useEffect(() => {
 		const fetchData = () => {
@@ -32,7 +27,7 @@ const Todo = () => {
 			})
 				.then((response) => response.json())
 				.then((result) => {
-					if (result !== false) {
+					if (result.status === 200) {
 						console.log(result);
 						const currentDate = new Date().toISOString().split('T')[0];
 						const filteredTasks = result.todos.filter((todo) => {
@@ -46,7 +41,7 @@ const Todo = () => {
 				})
 				.catch((error) => {
 					console.error(error);
-					setError(error);
+					setMessage('An error has occurred, please try again later.');
 				});
 		};
 		if (currentUser !== null) {
@@ -59,10 +54,14 @@ const Todo = () => {
 			<Create setRefresh={setRefresh} />
 			<ScrollView style={theme === 'dark' ? styles.darkScroll : styles.lightScroll}>
 				<View style={styles.items}>
-					{todayTask ? (
+					{todayTask.length != 0 ? (
 						todayTask.map((data, index) => <Task key={index} data={data} setRefresh={setRefresh} />)
 					) : (
-						<Text>{message}</Text>
+						<View style={styles.msgContainer}>
+							<Text style={theme === 'dark' ? styles.darkNoTaskMsg : styles.noTaskMsg}>
+								You have no todos today, Add one below!
+							</Text>
+						</View>
 					)}
 				</View>
 			</ScrollView>
@@ -72,12 +71,14 @@ const Todo = () => {
 
 const styles = StyleSheet.create({
 	lightTasksWrapper: {
+		position: 'relative',
 		paddingHorizontal: 20,
 		height: '100%',
 		paddingBottom: 100,
 		backgroundColor: Colors.primary,
 	},
 	darkTasksWrapper: {
+		position: 'relative',
 		paddingHorizontal: 20,
 		height: '100%',
 		paddingBottom: 100,
@@ -93,6 +94,19 @@ const styles = StyleSheet.create({
 	},
 	items: {
 		marginTop: 20,
+	},
+	msgContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	noTaskMsg: {
+		marginTop: 280,
+		fontSize: 18,
+	},
+	darkNoTaskMsg: {
+		marginTop: 280,
+		fontSize: 18,
+		color: Colors.primary,
 	},
 });
 

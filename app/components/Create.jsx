@@ -69,7 +69,7 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 			.then((response) => response.json())
 			.then((result) => {
 				console.log(result);
-				if (result.error === false) {
+				if (result.status === 200) {
 					setModalVisible(false);
 					setRefresh((prev) => !prev);
 				} else {
@@ -89,7 +89,6 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 			});
 	};
 
-	// TODO: convert date + time to timestamp
 	const dateConvertor = () => {
 		const dateObj = new Date(date);
 		const timeObj = new Date(time);
@@ -135,7 +134,7 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 					onChange={onChangeTime}
 				/>
 			)}
-			{message && <Text>{message}</Text>}
+			{message && <Text style={theme === 'dark' ? styles.darkMsg : styles.msg}>{message}</Text>}
 			<View style={theme === 'dark' ? styles.darkModalView : styles.modalView}>
 				<Text style={theme === 'dark' ? styles.darkTitle : styles.title}>New Todo</Text>
 				<View style={styles.modalContainer}>
@@ -241,13 +240,6 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.brand,
 		borderRadius: 20,
 		padding: 20,
-		shadowColor: Colors.primary,
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
 		elevation: 5,
 		zIndex: 20,
 	},
@@ -329,6 +321,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		zIndex: 10,
 	},
+	msg: {},
+	darkMsg: {},
 });
 
 export default Create;

@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 		width: 40,
 	},
 	button: {
-		width: '40%',
+		width: 150,
 		padding: 10,
 		backgroundColor: Colors.brand,
 		justifyContent: 'center',
@@ -107,18 +107,22 @@ const styles = StyleSheet.create({
 		height: 50,
 	},
 	darkButton: {
+		width: 150,
 		padding: 10,
 		backgroundColor: Colors.secondary,
 		justifyContent: 'center',
 		alignItems: 'center',
+		borderRadius: 5,
 		height: 50,
 	},
 	buttonText: {
 		color: Colors.primary,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 	darkButtonText: {
 		color: Colors.brand,
+		fontWeight: 'bold',
 		fontSize: 18,
 	},
 });

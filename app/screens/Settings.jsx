@@ -21,7 +21,7 @@ const Settings = () => {
 	return (
 		<View style={theme === 'dark' ? styles.darkContainer : styles.lightContainer}>
 			<StatusBar style="dark" />
-			{message && <Text style={styles.msg}>{message}</Text>}
+			{message && <Text style={theme === 'dark' ? styles.darkMsg : styles.msg}>{message}</Text>}
 			<View style={styles.innerContainer}>
 				<View style={styles.modeWrapper}>
 					<Text style={theme === 'dark' ? styles.darkText : styles.lightText}>Dark Mode</Text>
@@ -112,6 +112,17 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		textAlign: 'center',
 		color: Colors.tertiary,
+		padding: 10,
+		marginBottom: 20,
+		position: 'absolute',
+		bottom: 160,
+		left: 160,
+	},
+	darkMsg: {
+		fontSize: 14,
+		fontWeight: 'bold',
+		textAlign: 'center',
+		color: Colors.primary,
 		padding: 10,
 		marginBottom: 20,
 		position: 'absolute',
