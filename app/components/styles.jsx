@@ -5,8 +5,8 @@ export const Colors = {
 	tertiary: '#1F2937',
 	darkLight: '#9CA3AF',
 	brand: '#346ec9',
-	green: '#10B981',
-	red: '#EF4444',
+	green: '#008000',
+	red: '#FF0000',
 	black: '#000',
 };
 
