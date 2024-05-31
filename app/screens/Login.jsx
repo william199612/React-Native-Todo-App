@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Feather, Octicons, Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/useAuth';
 import { useTheme } from '../contexts/useTheme';
 
 const Login = ({ navigation }) => {
-	const { setIsLoggedIn, currentUser, setCurrentUser } = useAuth();
+	const { setIsLoggedIn, setCurrentUser } = useAuth();
 	const { theme } = useTheme();
 
 	const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ const Login = ({ navigation }) => {
 	const [message, setMessage] = useState('');
 
 	const fetchData = () => {
-		const url = 'http://localhost:8080/users/login';
+		const url = 'http://10.0.2.2:8080/users/login';
 
 		setIsSubmitting(true);
 
