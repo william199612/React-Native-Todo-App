@@ -80,8 +80,9 @@ router.post("/", async (req, res) => {
 });
 
 // Put: update an existing todo by id
-router.put("/", async (req, res) => {
-	const { id, description, due_date, completed } = req.body;
+router.put("/:id", async (req, res) => {
+	const { id } = req.params;
+	const { description, due_date, completed } = req.body;
 	const knex = req.db;
 
 	try {
@@ -111,8 +112,8 @@ router.put("/", async (req, res) => {
 });
 
 // Delete: delete an existing todo by id
-router.delete("/", async (req, res) => {
-	const { id } = req.body;
+router.delete("/:id", async (req, res) => {
+	const { id } = req.params;
 	const knex = req.db;
 
 	try {
