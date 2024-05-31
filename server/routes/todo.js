@@ -86,14 +86,21 @@ router.put("/:id", async (req, res) => {
 	const knex = req.db;
 
 	try {
+		let updateFields = {};
+		if (description !== undefined) {
+			updateFields.description = description;
+		}
+		if (due_date !== undefined) {
+			updateFields.due_date = due_date;
+		}
+		if (completed !== undefined) {
+			updateFields.completed = completed;
+		}
+
 		const updatedTodo = await knex("Todo")
 			.where({ id })
-			.update({
-				description,
-				due_date,
-				completed,
-			});
-		if (!updated) {
+			.update(updateFields);
+		if (!updatedTodo) {
 			return res.status(404).json({
 				error: true,
 				message: "Cannot update todo",
@@ -118,7 +125,7 @@ router.delete("/:id", async (req, res) => {
 
 	try {
 		const deleted = await knex("Todo").where({ id }).del();
-		if (deleted) {
+		if (!deleted) {
 			return res.status(404).json({
 				error: true,
 				message: "Cannot delete todo",
