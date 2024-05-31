@@ -22,7 +22,7 @@ const Task = ({ data, setRefresh }) => {
 		const now = new Date();
 		const diff = (due - now) / 60000; // Difference in minutes
 
-		if (data.completed) return 'Done!';
+		if (data.completed) return 'Done';
 		if (diff == 0) return 'Due now';
 		if (diff <= 0) return 'Over due time';
 
@@ -49,7 +49,7 @@ const Task = ({ data, setRefresh }) => {
 			.then((response) => response.json())
 			.then((result) => {
 				if (result !== null) {
-					console.log(result);
+					// console.log(result);
 					setRefresh((prev) => !prev);
 				} else {
 					setMessage('Something went wrong. Please try again later.');
@@ -124,7 +124,7 @@ const Task = ({ data, setRefresh }) => {
 					{data.description}
 				</Text>
 				<Text style={styles.lightTime}>
-					{data.due_date && `Due: ${formatDate(data.due_date)}`}
+					{data.due_date && formatDate(data.due_date)}
 					<Text style={styles.leftTime}>{`    ${calculateTimeLeft(data.due_date)}`}</Text>
 				</Text>
 			</Card.Content>

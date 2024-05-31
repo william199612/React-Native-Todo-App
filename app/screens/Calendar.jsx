@@ -4,35 +4,45 @@ import { Calendar } from 'react-native-calendars';
 
 import Task from '../components/Task';
 import { useTheme } from '../contexts/useTheme';
+import { useAuth } from '../contexts/useAuth';
 import { Colors } from '../components/styles';
-
-const todos = {
-	'2024-05-15': [
-		{ description: 'Eat', dueTime: '10:00', isCompleted: false },
-		{
-			description: 'Event Event Event Event Event Event Event Event Event Event Event',
-			dueTime: '10:01',
-			isCompleted: true,
-		},
-		{ description: 'Eat sleep and netflix and chill', dueTime: '10:02', isCompleted: true },
-		{ description: 'Event 2', dueTime: '10:03', isCompleted: true },
-		{ description: 'Event 2', dueTime: '10:04', isCompleted: true },
-		{ description: 'Event 2', dueTime: '10:05', isCompleted: true },
-		{ description: 'Event 2', dueTime: '10:06', isCompleted: true },
-		{ description: 'Event 2', dueTime: '10:07', isCompleted: true },
-		{ description: 'Event 2', dueTime: '10:08', isCompleted: true },
-	],
-	'2024-05-16': [{ description: 'Event 3' }, { description: 'Event 4' }],
-};
 
 const CalendarScreen = () => {
 	const { theme } = useTheme();
-	const [items, setItems] = useState(todos);
+	const { currentUser } = useAuth();
+	const [items, setItems] = useState([]);
 	const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+	const [refresh, setRefresh] = useState(false);
+	const [message, setMessage] = useState('');
 
 	useEffect(() => {
-		setItems(todos);
-	}, [todos]);
+		const fetchData = () => {
+			const url = 'http://10.0.2.2:8080/todos';
+			fetch(`${url}/${currentUser}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+				},
+			})
+				.then((response) => response.json())
+				.then((result) => {
+					if (result.error !== false) {
+						const filteredTasks = result.todos.filter((todo) => {
+							const taskDate = new Date(todo.due_date).toISOString().split('T')[0];
+							return taskDate === selectedDate;
+						});
+						setItems(filteredTasks);
+					} else {
+						setMessage(result.message);
+					}
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		};
+		fetchData();
+	}, [selectedDate, refresh]);
 
 	const handleDayPress = (date) => {
 		setSelectedDate(date.dateString);
@@ -46,7 +56,7 @@ const CalendarScreen = () => {
 				markedDates={{ [selectedDate]: { selected: true } }}
 			/>
 			<ScrollView style={styles.scrollContainer}>
-				{items[selectedDate] && items[selectedDate].map((data, index) => <Task key={index} data={data} />)}
+				{items && items.map((data, index) => <Task key={index} data={data} setRefresh={setRefresh} />)}
 			</ScrollView>
 		</View>
 	);
@@ -67,7 +77,7 @@ const styles = StyleSheet.create({
 		textSectionTitleColor: Colors.black,
 		selectedDayBackgroundColor: Colors.brand,
 		selectedDayTextColor: Colors.primary,
-		todayTextColor: Colors.primary,
+		todayTextColor: Colors.brand,
 		dayTextColor: Colors.darkLight,
 		textDisabledColor: Colors.secondary,
 		dotColor: Colors.brand,

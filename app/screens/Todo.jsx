@@ -7,18 +7,9 @@ import { useTheme } from '../contexts/useTheme';
 import Task from '../components/Task';
 import Create from '../components/Create';
 
-function formatDate(date) {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
-	const day = String(date.getDate()).padStart(2, '0');
-
-	return `${year}-${month}-${day}`;
-}
-
 const Todo = () => {
 	const { currentUser, setCurrentUser } = useAuth();
 	const { theme } = useTheme();
-	const [taskList, setTaskList] = useState([]);
 	const [todayTask, setTodayTask] = useState([]);
 	const [error, setError] = useState(null);
 	const [message, setMessage] = useState('');
@@ -42,8 +33,7 @@ const Todo = () => {
 				.then((response) => response.json())
 				.then((result) => {
 					if (result !== null) {
-						console.log(result);
-						setTaskList(result.todos);
+						// console.log(result);
 
 						const currentDate = new Date().toISOString().split('T')[0];
 						const filteredTasks = result.todos.filter((todo) => {
