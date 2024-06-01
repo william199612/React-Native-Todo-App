@@ -1,5 +1,3 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
 # dependencies
 node_modules/
 
@@ -29,7 +27,22 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
+.example.env
 .env*.local
 
 # typescript
 *.tsbuildinfo
+
+# modules
+/node_modules/
+
+# dependencies
+.env
+
+# seed files
+**/seeds
+**/migrations
+
+# server logs file
+access.txt
