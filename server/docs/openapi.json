@@ -12,11 +12,532 @@
 			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
 		}
 	},
+	"servers": [
+		{
+			"url": "http://localhost:8080"
+		}
+	],
+	"tags": [
+		{
+			"name": "default",
+			"description": "Index Route"
+		},
+		{
+			"name": "todos",
+			"description": "Todo Route"
+		},
+		{
+			"name": "user",
+			"description": "User Route"
+		}
+	],
 	"paths": {
-		"/api/todo": {
+		"/": {
 			"get": {
-				"summary": "List all todos",
-				"description": "Full listing of todo info",
+				"tags": ["default"],
+				"summary": "simple description of this project",
+				"responses": {
+					"200": {
+						"description": "success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"unit": {
+											"type": "string",
+											"example": "IFN666"
+										},
+										"assignment": {
+											"type": "string",
+											"example": "Assignment 3 React Native application"
+										},
+										"topic": {
+											"type": "string",
+											"example": "Todo App"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/todos/{id}": {
+			"get": {
+				"tags": ["todos"],
+				"summary": "Get a specific todo by id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						},
+						"description": "ID of the todo to retrieve."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Todo retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "todo by id retrieved successfully"
+										},
+										"todo": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "integer"
+												},
+												"description": {
+													"type": "string"
+												},
+												"due_date": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"completed": {
+													"type": "boolean"
+												},
+												"created_at": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"user_id": {
+													"type": "integer"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Todo not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Todo not found"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": ["todos"],
+				"summary": "Update a specific todo by id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						},
+						"description": "ID of the todo to update."
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"description": {
+										"type": "string",
+										"example": "todo description"
+									},
+									"due_date": {
+										"type": "string",
+										"format": "date-time",
+										"example": "2024-06-01T08:05:00.000Z"
+									},
+									"completed": {
+										"type": "boolean",
+										"example": false
+									}
+								},
+								"required": ["description", "due_date", "completed"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Todo updated successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "update todo successfully"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Cannot find to do to be updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Cannot update todo"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["todos"],
+				"summary": "Delete a todo by id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						},
+						"description": "ID of the todo to delete."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Todo deleted successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "Todo deleted successfully"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Cannot find to do to be deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Cannot delete todo"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/todos/user/{user_id}": {
+			"get": {
+				"tags": ["todos"],
+				"summary": "Get todos by user_id",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						},
+						"description": "ID of the user to retrieve todos for."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Todos retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "todos retrieved successfully"
+										},
+										"todos": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "integer"
+													},
+													"description": {
+														"type": "string"
+													},
+													"due_date": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"completed": {
+														"type": "boolean"
+													},
+													"created_at": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"user_id": {
+														"type": "integer"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["todos"],
+				"summary": "Create a new todo for specific user",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						},
+						"description": "ID of the user to retrieve todos for."
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"description": {
+										"type": "string",
+										"example": "New todo description"
+									},
+									"due_date": {
+										"type": "string",
+										"format": "date-time",
+										"example": "2024-06-01T00:30:00.000Z"
+									}
+								},
+								"required": ["user_id", "description", "due_date"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Todo created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "Todo created"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Description and user_id are required"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user": {
+			"get": {
+				"tags": ["user"],
+				"summary": "User Route",
 				"responses": {
 					"200": {
 						"description": "success",
@@ -26,31 +547,230 @@
 									"type": "object",
 									"properties": {
 										"error": {
-											"type": "string",
-											"enum": ["true", "false"]
+											"type": "boolean",
+											"example": false
 										},
-										"todos": {
-											"type": "array",
-											"items": {
-												"type": "object",
-												"properties": {
-													"ID": {
-														"type": "integer"
-													},
-													"context": {
-														"type": "string"
-													},
-													"startTime": {
-														"type": "string"
-													},
-													"endTime": {
-														"type": "string"
-													},
-													"color": {
-														"type": "string"
-													}
-												}
+										"message": {
+											"type": "string",
+											"example": "Users Route"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/register": {
+			"post": {
+				"tags": ["user"],
+				"summary": "User Register",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"example": "test user"
+									},
+									"email": {
+										"type": "string",
+										"example": "test@gmail.com"
+									},
+									"password": {
+										"type": "string",
+										"example": "$2b$10$1gp*********************************************"
+									},
+									"birth": {
+										"type": "string",
+										"format": "date-time",
+										"example": "2024-06-01T08:05:00.000Z"
+									}
+								},
+								"required": ["name", "email", "password", "birth"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "User created"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "User already exists",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "User already exists"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/login": {
+			"post": {
+				"tags": ["user"],
+				"summary": "User Login",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"example": "test@gmail.com"
+									},
+									"password": {
+										"type": "string",
+										"example": "test"
+									}
+								},
+								"required": ["email", "password"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User Login Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "Login successful"
+										},
+										"user": {
+											"type": "object",
+											"example": {
+												"id": 2,
+												"name": "test",
+												"email": "test@gmail.com",
+												"password": "$2b$10$1gp*********************************************",
+												"birth": "2024-05-08",
+												"created_at": "2024-05-31 16:54:40"
 											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid credentials",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Invalid credentials"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "User not found"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Error message"
 										}
 									}
 								}
