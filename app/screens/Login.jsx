@@ -18,7 +18,7 @@ const Login = ({ navigation }) => {
 	const [hidePassword, setHidePassword] = useState(true);
 	const [message, setMessage] = useState(null);
 
-	const fetchData = () => {
+	const Login = () => {
 		const url = 'http://10.0.2.2:8080/users/login';
 
 		setIsSubmitting(true);
@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
 		})
 			.then((response) => response.json())
 			.then((result) => {
-				if (result.status === 200) {
+				if (result.error == false) {
 					setMessage('Login successfully! Redirecting to home page.');
 					setTimeout(() => {
 						setMessage(null);
@@ -64,7 +64,7 @@ const Login = ({ navigation }) => {
 
 	const handleSubmit = () => {
 		console.log('Submitting...');
-		fetchData();
+		Login();
 	};
 
 	// const handleGoogleLogin = () => {

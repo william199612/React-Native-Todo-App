@@ -17,15 +17,15 @@ const AddButton = ({ setModalVisible }) => {
 	);
 };
 
-const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
+const CreateModal = ({ modalVisible, setModalVisible }) => {
 	const { theme } = useTheme();
-	const { currentUser } = useAuth();
+	const { currentUser, setRefresh } = useAuth();
 	const [date, setDate] = useState(new Date());
 	const [time, setTime] = useState(new Date());
 	const [task, setTask] = useState('');
 	const [showDate, setShowDate] = useState(false);
 	const [showTime, setShowTime] = useState(false);
-	const [message, setMessage] = useState('');
+	const [message, setMessage] = useState(null);
 
 	const showDatePicker = () => {
 		setShowDate(true);
@@ -69,14 +69,18 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 			.then((response) => response.json())
 			.then((result) => {
 				console.log(result);
-				if (result.status === 200) {
-					setModalVisible(false);
-					setRefresh((prev) => !prev);
+				if (result.error == false) {
+					setMessage('Created a todo!');
+					setTimeout(() => {
+						setMessage(null);
+						setModalVisible(false);
+						setRefresh((prev) => !prev);
+					}, 1000);
 				} else {
 					console.error('Server error:', result.error);
 					setMessage('An error occurred. Please try again.');
 					setTimeout(() => {
-						setMessage('');
+						setMessage(null);
 					}, 3000);
 				}
 			})
@@ -84,7 +88,7 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 				console.error('Fetch error:', error);
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
-					setMessage('');
+					setMessage(null);
 				}, 3000);
 			});
 	};
@@ -134,7 +138,11 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 					onChange={onChangeTime}
 				/>
 			)}
-			{message && <Text style={theme === 'dark' ? styles.darkMsg : styles.msg}>{message}</Text>}
+			{message && (
+				<View style={styles.msgContainer}>
+					<Text style={theme === 'dark' ? styles.darkMsg : styles.msg}>{message}</Text>
+				</View>
+			)}
 			<View style={theme === 'dark' ? styles.darkModalView : styles.modalView}>
 				<Text style={theme === 'dark' ? styles.darkTitle : styles.title}>New Todo</Text>
 				<View style={styles.modalContainer}>
@@ -174,13 +182,13 @@ const CreateModal = ({ modalVisible, setModalVisible, setRefresh }) => {
 	);
 };
 
-const Create = ({ setRefresh }) => {
+const Create = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	return (
 		<View style={styles.container}>
 			<AddButton setModalVisible={setModalVisible} />
-			<CreateModal modalVisible={modalVisible} setModalVisible={setModalVisible} setRefresh={setRefresh} />
+			<CreateModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
 		</View>
 	);
 };
@@ -321,8 +329,30 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		zIndex: 10,
 	},
-	msg: {},
-	darkMsg: {},
+	msgContainer: {
+		position: 'absolute',
+		top: 150,
+		left: 40,
+		width: '80%',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	msg: {
+		padding: 10,
+		backgroundColor: Colors.secondary,
+		color: Colors.brand,
+		fontWeight: 'bold',
+		borderRadius: 10,
+		zIndex: 50,
+	},
+	darkMsg: {
+		padding: 10,
+		backgroundColor: Colors.darkLight,
+		color: Colors.brand,
+		fontWeight: 'bold',
+		borderRadius: 10,
+		zIndex: 50,
+	},
 });
 
 export default Create;

@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
 		if (!todo) {
 			return res
 				.status(404)
-				.json({ message: "Todo not found" });
+				.json({ error: true, message: "Todo not found" });
 		}
 		return res.status(200).json({
 			error: false,
@@ -100,7 +100,7 @@ router.put("/:id", async (req, res) => {
 		const updatedTodo = await knex("Todo")
 			.where({ id })
 			.update(updateFields);
-		if (!updatedTodo) {
+		if (updatedTodo === 0) {
 			return res.status(404).json({
 				error: true,
 				message: "Cannot update todo",
@@ -109,7 +109,6 @@ router.put("/:id", async (req, res) => {
 		return res.status(200).json({
 			error: false,
 			message: "update todo successfully",
-			updatedTodo,
 		});
 	} catch (error) {
 		return res

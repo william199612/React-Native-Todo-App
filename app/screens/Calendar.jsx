@@ -3,66 +3,28 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
 import Task from '../components/Task';
+import Create from '../components/Create';
 import { useTheme } from '../contexts/useTheme';
 import { useAuth } from '../contexts/useAuth';
 import { Colors } from '../components/styles';
 
 const CalendarScreen = () => {
 	const { theme } = useTheme();
-	const { currentUser } = useAuth();
+	const { tasks, refresh } = useAuth();
 	const [items, setItems] = useState([]);
-	const [selectedItems, setSelectedItems] = useState([]);
 	const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-	const [refresh, setRefresh] = useState(false);
 	const [message, setMessage] = useState(null);
 
 	useEffect(() => {
-		const fetchData = () => {
-			const url = 'http://10.0.2.2:8080/todos';
-			fetch(`${url}/${currentUser}`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-				},
-			})
-				.then((response) => response.json())
-				.then((result) => {
-					if (result.status === 200) {
-						console.log(result);
-						const filteredTasks = result.todos.filter((todo) => {
-							const taskDate = new Date(todo.due_date).toISOString().split('T')[0];
-							return taskDate == selectedDate;
-						});
-						setItems(filteredTasks);
-					} else {
-						console.error(result.message);
-						setMessage('Something went wrong, try again later.');
-						setTimeout(() => {
-							setMessage(null);
-						}, 2000);
-					}
-				})
-				.catch((error) => {
-					console.error(error);
-					setMessage('Something went wrong, try again later.');
-					setTimeout(() => {
-						setMessage(null);
-					}, 2000);
-				});
-		};
-		fetchData();
-	}, [refresh]);
-
-	useEffect(() => {
-		const filteredTasks = items.filter((todo) => {
+		const filteredTasks = tasks.filter((todo) => {
 			const taskDate = new Date(todo.due_date).toISOString().split('T')[0];
-			return taskDate === selectedDate;
+			return taskDate == selectedDate;
 		});
-		setSelectedItems(filteredTasks);
-	}, [selectedDate, refresh]);
+		setItems(filteredTasks);
+	}, [tasks, selectedDate, refresh]);
 
 	const handleDayPress = (date) => {
+		// console.log(items);
 		setSelectedDate(date.dateString);
 	};
 
@@ -73,15 +35,20 @@ const CalendarScreen = () => {
 				onDayPress={handleDayPress}
 				markedDates={{ [selectedDate]: { selected: true } }}
 			/>
+			<Create />
 			<ScrollView style={styles.scrollContainer}>
-				{selectedItems.length != 0 ? (
-					selectedItems.map((data, index) => <Task key={index} data={data} setRefresh={setRefresh} />)
+				{items.length != 0 ? (
+					items.map((data, index) => <Task key={index} data={data} setMessage={setMessage} />)
 				) : (
 					<View style={styles.msgContainer}>
 						<Text style={theme === 'dark' ? styles.darkNoTaskMsg : styles.noTaskMsg}>You have no todos today</Text>
 					</View>
 				)}
-				{message && <Text style={theme === 'dark' ? styles.darkMsg : styles.msg}>{message}</Text>}
+				{message && (
+					<View style={styles.popUpContainer}>
+						<Text style={theme === 'dark' ? styles.darkMsg : styles.msg}>{message}</Text>
+					</View>
+				)}
 			</ScrollView>
 		</View>
 	);
@@ -104,7 +71,7 @@ const styles = StyleSheet.create({
 		selectedDayTextColor: Colors.primary,
 		todayTextColor: Colors.brand,
 		dayTextColor: Colors.darkLight,
-		textDisabledColor: Colors.secondary,
+		textDisabledColor: Colors.darkLight,
 		dotColor: Colors.brand,
 		selectedDotColor: Colors.black,
 		monthTextColor: Colors.black,
@@ -142,27 +109,30 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		color: Colors.primary,
 	},
-	msg: {
-		fontSize: 14,
-		fontWeight: 'bold',
-		textAlign: 'center',
-		color: Colors.tertiary,
-		padding: 10,
-		marginBottom: 20,
+	popUpContainer: {
 		position: 'absolute',
-		bottom: 140,
-		left: 160,
+		top: 0,
+		left: 40,
+		width: '80%',
+		justifyContent: 'center',
+		alignItems: 'center',
+		zIndex: 10,
+	},
+	msg: {
+		padding: 10,
+		backgroundColor: Colors.secondary,
+		color: Colors.brand,
+		fontWeight: 'bold',
+		borderRadius: 10,
+		zIndex: 50,
 	},
 	darkMsg: {
-		fontSize: 14,
-		fontWeight: 'bold',
-		textAlign: 'center',
-		color: Colors.primary,
 		padding: 10,
-		marginBottom: 20,
-		position: 'absolute',
-		bottom: 140,
-		left: 160,
+		backgroundColor: Colors.darkLight,
+		color: Colors.brand,
+		fontWeight: 'bold',
+		borderRadius: 10,
+		zIndex: 50,
 	},
 });
 

@@ -58,8 +58,9 @@ const Signup = ({ navigation }) => {
 				password,
 			}),
 		})
-			.then((response) => {
-				if (response.status === 200) {
+			.then((response) => response.json())
+			.then((result) => {
+				if (result.error == false) {
 					setMessage('Signup successfully! Redirecting to Login page.');
 					setTimeout(() => {
 						navigation.navigate('Login');
@@ -76,7 +77,7 @@ const Signup = ({ navigation }) => {
 				console.error('Fetch error:', error);
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
-					setMessage('');
+					setMessage(null);
 				}, 1500);
 			});
 	};
