@@ -186,7 +186,7 @@ const PopUpModal = ({ modalVisible, setModalVisible, data }) => {
 					</Pressable>
 					<View style={styles.centerView}>
 						<Pressable style={theme === 'dark' ? styles.darkSubmitButton : styles.submitButton} onPress={handleSubmit}>
-							<Text style={theme === 'dark' ? styles.darkButtonText : styles.buttonText}>Create</Text>
+							<Text style={theme === 'dark' ? styles.darkButtonText : styles.buttonText}>Edit</Text>
 						</Pressable>
 					</View>
 				</View>
