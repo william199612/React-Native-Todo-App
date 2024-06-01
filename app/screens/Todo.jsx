@@ -13,7 +13,7 @@ const Todo = () => {
 	const [todayTask, setTodayTask] = useState([]);
 	const [message, setMessage] = useState(null);
 
-	const url = 'http://10.0.2.2:8080/todos';
+	const url = 'http://10.0.2.2:8080/todos/user';
 
 	useEffect(() => {
 		const fetchData = () => {

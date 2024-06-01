@@ -1,73 +1,66 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcrypt");
-require("dotenv").config();
+const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 /* GET home page. */
-router.get("/", function (req, res) {
-	return res
-		.status(200)
-		.json({ error: false, message: "Users Route" });
+router.get('/', function (req, res) {
+	return res.status(200).json({ error: false, message: 'Users Route' });
 });
 
-router.post("/register", async (req, res) => {
+router.post('/register', async (req, res) => {
 	const { name, email, password, birth } = req.body;
 	const knex = req.db;
 	const salt = Number(process.env.CRYPT_SALT);
 
 	try {
+		const existingUser = await knex('User').where({ email }).first();
+		if (existingUser) {
+			return res.status(400).json({
+				error: true,
+				message: 'User already exists',
+			});
+		}
+
 		const hash = await bcrypt.hash(password, salt);
-		await knex("User").insert({
+		await knex('User').insert({
 			name,
 			email,
 			password: hash,
 			birth,
 		});
-		return res
-			.status(200)
-			.json({ error: false, message: "User created" });
+		return res.status(201).json({ error: false, message: 'User created' });
 	} catch (error) {
 		console.log(error);
-		return res
-			.status(500)
-			.json({ error: true, message: error.message });
+		return res.status(500).json({ error: true, message: error.message });
 	}
 });
 
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
 	const { email, password } = req.body;
 	const knex = req.db;
 
 	try {
-		const user = await knex("User")
-			.where({ email })
-			.first();
+		const user = await knex('User').where({ email }).first();
 		if (!user) {
-			return res
-				.status(404)
-				.json({ error: true, message: "User not found" });
+			return res.status(404).json({ error: true, message: 'User not found' });
 		}
 
-		const isMatch = await bcrypt.compare(
-			password,
-			user.password
-		);
+		const isMatch = await bcrypt.compare(password, user.password);
 
 		if (!isMatch) {
 			return res.status(401).json({
 				error: true,
-				message: "Invalid credentials",
+				message: 'Invalid credentials',
 			});
 		}
 		return res.status(200).json({
 			error: false,
-			message: "Login successful",
+			message: 'Login successful',
 			user,
 		});
 	} catch (error) {
-		return res
-			.status(500)
-			.json({ error: true, message: error.message });
+		return res.status(500).json({ error: true, message: error.message });
 	}
 });
 

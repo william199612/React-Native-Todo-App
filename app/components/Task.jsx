@@ -37,7 +37,7 @@ const Task = ({ data, setMessage }) => {
 		else return `${hours}hr ${minutes}min left`;
 	};
 
-	const updateData = (type) => {
+	const updateData = () => {
 		const url = `http://10.0.2.2:8080/todos/${data.id}`;
 
 		fetch(url, {
@@ -54,8 +54,8 @@ const Task = ({ data, setMessage }) => {
 			.then((result) => {
 				if (result.error == false) {
 					setRefresh((prev) => !prev);
-				} else {
-					setMessage('Something went wrong. Please try again later.');
+				} else if (result.error == true) {
+					setMessage(`Something went wrong. ${result.message}`);
 				}
 			})
 			.catch((error) => {
@@ -69,9 +69,9 @@ const Task = ({ data, setMessage }) => {
 		setTimeout(() => {
 			setMessage(null);
 		}, 1000);
-		const url = `http://10.0.2.2:8080/todos/${data.id}`;
+		const url = 'http://10.0.2.2:8080/todos';
 
-		fetch(url, {
+		fetch(`${url}/${data.id}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -81,10 +81,10 @@ const Task = ({ data, setMessage }) => {
 			.then((response) => response.json())
 			.then((result) => {
 				if (result.error == false) {
-					console.log(result);
+					// console.log(result);
 					setRefresh((prev) => !prev);
-				} else {
-					setMessage('Something went wrong. Please try again later.');
+				} else if (result.error == true) {
+					setMessage(`Something went wrong. ${result.message}`);
 					setTimeout(() => {
 						setMessage(null);
 					}, 2000);
@@ -100,17 +100,17 @@ const Task = ({ data, setMessage }) => {
 	};
 
 	const handleComplete = () => {
-		console.log('Press complete.');
-		updateData('complete');
+		// console.log('Press complete.');
+		updateData();
 	};
 
 	const handleDelete = () => {
-		console.log('Press delete.');
+		// console.log('Press delete.');
 		deleteData();
 	};
 
 	const handleEdit = () => {
-		console.log('Press edit.');
+		// console.log('Press edit.');
 		setModalVisible(!modalVisible);
 	};
 

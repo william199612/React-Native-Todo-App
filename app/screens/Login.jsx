@@ -37,14 +37,14 @@ const Login = ({ navigation }) => {
 			.then((response) => response.json())
 			.then((result) => {
 				if (result.error == false) {
-					setMessage('Login successfully! Redirecting to home page.');
+					setMessage('Login successfully!');
 					setTimeout(() => {
 						setMessage(null);
 						setCurrentUser(result.user.id);
 						setIsSubmitting(false);
 						setIsLoggedIn(true);
 					}, 1000);
-				} else {
+				} else if (result.error == true) {
 					setMessage(result.message);
 					setIsSubmitting(false);
 					setTimeout(() => {

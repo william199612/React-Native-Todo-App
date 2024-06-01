@@ -55,14 +55,14 @@ const PopUpModal = ({ modalVisible, setModalVisible, data }) => {
 	};
 
 	const handleSubmit = async () => {
-		const url = `http://10.0.2.2:8080/todos/${data.id}`;
+		const url = 'http://10.0.2.2:8080/todos';
 
 		console.log(task, date, time);
 
 		const convertedDate = dateConvertor();
 
 		try {
-			const response = await fetch(url, {
+			const response = await fetch(`${url}/${data.id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const PopUpModal = ({ modalVisible, setModalVisible, data }) => {
 
 			if (!response.ok) {
 				console.error('Fetch error:', response);
-				setMessage('An error occurred. Please try again.');
+				setMessage('Something went wrong. Please try again.');
 				setTimeout(() => {
 					setMessage(null);
 				}, 3000);
@@ -92,16 +92,16 @@ const PopUpModal = ({ modalVisible, setModalVisible, data }) => {
 					setModalVisible(false);
 					setRefresh((prev) => !prev);
 				}, 1000);
-			} else {
+			} else if (result.error == true) {
 				console.error('Server error:', result.error);
-				setMessage('An error occurred. Please try again.');
+				setMessage(`Something went wrong. ${result.message}`);
 				setTimeout(() => {
 					setMessage(null);
 				}, 2000);
 			}
 		} catch (error) {
 			console.error('Fetch error:', error);
-			setMessage('An error occurred. Please try again.');
+			setMessage('Something went wrong. Please try again.');
 			setTimeout(() => {
 				setMessage(null);
 			}, 2000);

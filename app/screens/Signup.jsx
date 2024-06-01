@@ -64,10 +64,10 @@ const Signup = ({ navigation }) => {
 					setMessage('Signup successfully! Redirecting to Login page.');
 					setTimeout(() => {
 						navigation.navigate('Login');
-					}, 1500);
-				} else {
+					}, 1000);
+				} else if (result.error == true) {
 					console.error('Server error:', result.error);
-					setMessage('An error occurred. Please try again.');
+					setMessage(result.message);
 					setTimeout(() => {
 						setMessage(null);
 					}, 1500);

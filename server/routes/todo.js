@@ -1,64 +1,38 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 // GET todos by user_id
-router.get("/:user_id", async (req, res, next) => {
+router.get('/user/:user_id', async (req, res, next) => {
 	const { user_id } = req.params;
 	const knex = req.db;
 
 	try {
-		const todos = await knex("Todo").where({ user_id });
+		const todos = await knex('Todo').where({ user_id });
 		return res.status(200).json({
 			error: false,
-			message: "todos retrieved successfully",
+			message: 'todos retrieved successfully',
 			todos,
 		});
 	} catch (error) {
-		return res
-			.status(500)
-			.json({ error: true, error: error.message });
-	}
-});
-
-// Get a specific todo by id
-// for postman testing
-router.get("/:id", async (req, res) => {
-	const { id } = req.params;
-	const knex = req.db;
-
-	try {
-		const todo = await knex("Todo").where({ id }).first();
-		if (!todo) {
-			return res
-				.status(404)
-				.json({ error: true, message: "Todo not found" });
-		}
-		return res.status(200).json({
-			error: false,
-			message: "todo by id retrieved successfully",
-			todo,
-		});
-	} catch (error) {
-		return res
-			.status(500)
-			.json({ error: true, error: error.message });
+		return res.status(500).json({ error: true, error: error.message });
 	}
 });
 
 // Post: create a new todo
-router.post("/", async (req, res) => {
-	const { description, due_date, user_id } = req.body;
+router.post('/user/:user_id', async (req, res) => {
+	const { user_id } = req.params;
+	const { description, due_date } = req.body;
 	const knex = req.db;
 
-	if (!description || !user_id) {
+	if (!description || !due_date || !user_id) {
 		return res.status(400).json({
 			error: true,
-			message: "Description and user_id are required",
+			message: 'All fields are required',
 		});
 	}
 
 	try {
-		const [id] = await knex("Todo").insert({
+		const [id] = await knex('Todo').insert({
 			description,
 			due_date,
 			user_id,
@@ -66,21 +40,38 @@ router.post("/", async (req, res) => {
 		if (!id) {
 			return res.status(400).json({
 				error: true,
-				message: "Cannot create todo",
+				message: 'Cannot create todo',
 			});
 		}
-		return res
-			.status(201)
-			.json({ error: false, message: "Todo created" });
+		return res.status(201).json({ error: false, message: 'Todo created' });
 	} catch (error) {
-		return res
-			.status(500)
-			.json({ error: true, error: error.message });
+		return res.status(500).json({ error: true, error: error.message });
+	}
+});
+
+// Get a specific todo by id
+// for postman testing
+router.get('/:id', async (req, res) => {
+	const { id } = req.params;
+	const knex = req.db;
+
+	try {
+		const todo = await knex('Todo').where({ id }).first();
+		if (!todo) {
+			return res.status(404).json({ error: true, message: 'Todo not found' });
+		}
+		return res.status(200).json({
+			error: false,
+			message: 'todo by id retrieved successfully',
+			todo,
+		});
+	} catch (error) {
+		return res.status(500).json({ error: true, error: error.message });
 	}
 });
 
 // Put: update an existing todo by id
-router.put("/:id", async (req, res) => {
+router.put('/:id', async (req, res) => {
 	const { id } = req.params;
 	const { description, due_date, completed } = req.body;
 	const knex = req.db;
@@ -97,47 +88,41 @@ router.put("/:id", async (req, res) => {
 			updateFields.completed = completed;
 		}
 
-		const updatedTodo = await knex("Todo")
-			.where({ id })
-			.update(updateFields);
+		const updatedTodo = await knex('Todo').where({ id }).update(updateFields);
 		if (updatedTodo === 0) {
 			return res.status(404).json({
 				error: true,
-				message: "Cannot update todo",
+				message: 'Cannot update todo',
 			});
 		}
 		return res.status(200).json({
 			error: false,
-			message: "update todo successfully",
+			message: 'Update todo successfully',
 		});
 	} catch (error) {
-		return res
-			.status(500)
-			.json({ error: true, error: error.message });
+		return res.status(500).json({ error: true, error: error.message });
 	}
 });
 
 // Delete: delete an existing todo by id
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
 	const { id } = req.params;
 	const knex = req.db;
 
 	try {
-		const deleted = await knex("Todo").where({ id }).del();
+		const deleted = await knex('Todo').where({ id }).del();
 		if (!deleted) {
 			return res.status(404).json({
 				error: true,
-				message: "Cannot delete todo",
+				message: 'Cannot delete todo',
 			});
 		}
 		return res.status(200).json({
 			error: false,
-			message: "Todo deleted successfully",
+			message: 'Todo deleted successfully',
 		});
 	} catch (error) {
-		return res
-			.status(500)
-			.json({ error: true, error: error.message });
+		return res.status(500).json({ error: true, error: error.message });
 	}
 });
 

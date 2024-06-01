@@ -48,13 +48,13 @@ const CreateModal = ({ modalVisible, setModalVisible }) => {
 	};
 
 	const handleSubmit = () => {
-		const url = 'http://10.0.2.2:8080/todos';
+		const url = `http://10.0.2.2:8080/todos/user`;
 
 		console.log(task, date, time);
 
 		const convertedDate = dateConvertor();
 
-		fetch(url, {
+		fetch(`${url}/${currentUser}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -63,7 +63,6 @@ const CreateModal = ({ modalVisible, setModalVisible }) => {
 			body: JSON.stringify({
 				description: task,
 				due_date: convertedDate,
-				user_id: currentUser,
 			}),
 		})
 			.then((response) => response.json())
