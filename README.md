@@ -99,14 +99,23 @@ npx expo start
 ```
 
 > default port: `8081`, you can add `--port` to start your desired server
+> For example: `npx expo start --port 3000`
 
 **Backend**
+
+Before start running the backend, you will need to run the `init.sql` script(in the server directory) on your database server(for example, **MySQL**).
+
+After starting the database server, run:
 
 ```
 nodemon
 ```
 
-> default port: `8080`
+> default port: `8080`, you can change your port by adjusting the `PORT` in the `.env` file.
+
+***NOTICE***: 
+
+if you're using android studio as the frontend emulator, the present code may run successfully. **BUT!** if you are running on `web` view, you should change the fetch url (for frontend) to `http://localhost:8080/` as the base URL. 
 
 ### API Documentation
 

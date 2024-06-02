@@ -28,17 +28,10 @@ yarn-error.*
 
 # local env files
 .env
-.example.env
 .env*.local
 
 # typescript
 *.tsbuildinfo
-
-# modules
-/node_modules/
-
-# dependencies
-.env
 
 # seed files
 **/seeds
