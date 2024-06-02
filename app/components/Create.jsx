@@ -50,7 +50,7 @@ const CreateModal = ({ modalVisible, setModalVisible }) => {
 	const handleSubmit = () => {
 		const url = `http://10.0.2.2:8080/todos/user`;
 
-		console.log(task, date, time);
+		// console.log(task, date, time);
 
 		const convertedDate = dateConvertor();
 
@@ -67,7 +67,7 @@ const CreateModal = ({ modalVisible, setModalVisible }) => {
 		})
 			.then((response) => response.json())
 			.then((result) => {
-				console.log(result);
+				// console.log(result);
 				if (result.error == false) {
 					setMessage('Created a todo!');
 					setTimeout(() => {
@@ -76,7 +76,7 @@ const CreateModal = ({ modalVisible, setModalVisible }) => {
 						setRefresh((prev) => !prev);
 					}, 1000);
 				} else {
-					console.error('Server error:', result.error);
+					// console.error('Server error:', result.error);
 					setMessage('An error occurred. Please try again.');
 					setTimeout(() => {
 						setMessage(null);
@@ -84,7 +84,7 @@ const CreateModal = ({ modalVisible, setModalVisible }) => {
 				}
 			})
 			.catch((error) => {
-				console.error('Fetch error:', error);
+				// console.error('Fetch error:', error);
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
 					setMessage(null);

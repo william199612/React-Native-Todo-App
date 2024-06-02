@@ -53,7 +53,7 @@ const Login = ({ navigation }) => {
 				}
 			})
 			.catch((error) => {
-				console.error('Fetch error:', error);
+				// console.error('Fetch error:', error);
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
 					setIsSubmitting(false);
@@ -63,7 +63,7 @@ const Login = ({ navigation }) => {
 	};
 
 	const handleSubmit = () => {
-		console.log('Submitting...');
+		// console.log('Submitting...');
 		Login();
 	};
 

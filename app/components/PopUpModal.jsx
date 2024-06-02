@@ -75,7 +75,7 @@ const PopUpModal = ({ modalVisible, setModalVisible, data }) => {
 			});
 
 			if (!response.ok) {
-				console.error('Fetch error:', response);
+				// console.error('Fetch error:', response);
 				setMessage('Something went wrong. Please try again.');
 				setTimeout(() => {
 					setMessage(null);
@@ -93,14 +93,14 @@ const PopUpModal = ({ modalVisible, setModalVisible, data }) => {
 					setRefresh((prev) => !prev);
 				}, 1000);
 			} else if (result.error == true) {
-				console.error('Server error:', result.error);
+				// console.error('Server error:', result.error);
 				setMessage(`Something went wrong. ${result.message}`);
 				setTimeout(() => {
 					setMessage(null);
 				}, 2000);
 			}
 		} catch (error) {
-			console.error('Fetch error:', error);
+			// console.error('Fetch error:', error);
 			setMessage('Something went wrong. Please try again.');
 			setTimeout(() => {
 				setMessage(null);

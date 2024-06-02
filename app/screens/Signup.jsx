@@ -66,7 +66,7 @@ const Signup = ({ navigation }) => {
 						navigation.navigate('Login');
 					}, 1000);
 				} else if (result.error == true) {
-					console.error('Server error:', result.error);
+					// console.error('Server error:', result.error);
 					setMessage(result.message);
 					setTimeout(() => {
 						setMessage(null);
@@ -74,7 +74,7 @@ const Signup = ({ navigation }) => {
 				}
 			})
 			.catch((error) => {
-				console.error('Fetch error:', error);
+				// console.error('Fetch error:', error);
 				setMessage('An error occurred. Please try again.');
 				setTimeout(() => {
 					setMessage(null);
@@ -85,7 +85,7 @@ const Signup = ({ navigation }) => {
 	const onChange = (event, selectedDate) => {
 		const currentDate = selectedDate || date;
 		setShow(false);
-		console.log(currentDate);
+		// console.log(currentDate);
 		setDate(currentDate);
 	};
 

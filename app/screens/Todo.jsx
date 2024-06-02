@@ -38,7 +38,7 @@ const Todo = () => {
 					}
 				})
 				.catch((error) => {
-					console.error(error);
+					// console.error(error);
 					setMessage('An error has occurred, please try again later.');
 					setTimeout(() => {
 						setMessage(null);
